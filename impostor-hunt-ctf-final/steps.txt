@@ -1,0 +1,33 @@
+PHASE A — THE CORE (Most important, most asked about)
+──────────────────────────────────────────────────────
+Step 1:  models.py          ← Database design decisions
+Step 2:  extensions.py      ← Why we separate extensions
+Step 3:  config.py          ← Environment-based config
+Step 4:  __init__.py        ← App factory pattern
+Step 5:  flag_validator.py  ← The heart of the CTF logic
+Step 6:  run.py             ← Entry point
+
+PHASE B — THE VULNERABILITIES (Most academically valuable)
+──────────────────────────────────────────────────────────
+Step 7:  IDOR (medbay route + logic)
+Step 8:  XSS (admin terminal route + logic)
+Step 9:  Cookie Manipulation (communications route)
+Step 10: Hash Cracking (reactor route + MD5 explanation)
+Step 11: Log Analysis (security route)
+Step 12: Source Code (electrical route)
+Step 13: Base64 (cafeteria route)
+
+PHASE C — THE GAME LOGIC (Shows system thinking)
+─────────────────────────────────────────────────
+Step 14: room_state.py      ← State management
+Step 15: clue_engine.py     ← Progressive disclosure
+Step 16: emergency_gate.py  ← Access control logic
+Step 17: emergency.py       ← Final challenge flow
+Step 18: auth.py            ← Authentication
+Step 19: dashboard.py       ← Game state display
+
+PHASE D — HTML/CSS (Handle quickly, not the focus)
+───────────────────────────────────────────────────
+Step 20: base.html + CSS    ← Template inheritance
+Step 21: Room templates     ← Two-state pattern
+Step 22: Emergency templates ← Game flow screens

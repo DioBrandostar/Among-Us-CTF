@@ -1,0 +1,80 @@
+1. What is a CTF?
+   Capture The Flag — a cybersecurity competition where
+   players find hidden "flags" by exploiting vulnerabilities.
+
+2. Why beginner-friendly?
+   We targeted real OWASP Top 10 vulnerabilities but
+   implemented them in a guided, educational way with
+   hints and clear feedback.
+
+3. Why Among Us theme?
+   Makes security education engaging. The narrative
+   (find the impostor) gives purpose to each challenge
+   and keeps players motivated.
+
+4. What is OWASP Top 10?
+   The Open Web Application Security Project's list of
+   the 10 most critical web security risks. Our CTF
+   covers: IDOR (A01), Cryptographic Failures (A02),
+   XSS (A03), and Security Misconfiguration (A05).
+
+5. Why Flask over Django?
+   Flask is a microframework — lightweight and gives us
+   full control. Django is opinionated and includes
+   things we don't need. For a CTF of this scope,
+   Flask is the right choice.
+
+6. Why SQLite over MySQL/PostgreSQL?
+   SQLite is file-based, zero configuration, and
+   sufficient for a CTF with concurrent users in the
+   dozens. If we scaled to thousands, we'd switch
+   to PostgreSQL — our SQLAlchemy ORM makes that
+   a one-line config change.
+
+7. Why server-side progression gating?
+   Client-side validation can always be bypassed.
+   The emergency room check happens on the server —
+   the database is checked directly. No amount of
+   URL manipulation can bypass this.
+
+8. Why store wrong flag attempts?
+   Analytics. We can see which challenges are hardest,
+   detect brute-force attempts, and improve future
+   versions of the CTF.
+
+9. IDOR — explain exactly:
+   The dashboard shows scan IDs 2-7.
+   ID 1 (Shadow's) is hidden from the list.
+   The server doesn't validate that the requested
+   ID belongs to the requesting user.
+   So /room/medbay/scan?id=1 returns Shadow's
+   real (failing) scan record.
+   This is a textbook IDOR — accessing an object
+   by changing a reference without authorization.
+
+10. XSS — explain exactly:
+    Shadow's message contains a <script> tag stored
+    in our messages list.
+    The search bar reflects unsanitized input back
+    (reflected XSS).
+    We intentionally set the crew_session_data cookie
+    with httponly=False so JavaScript can read it.
+    This simulates a real session hijacking attack.
+
+11. Cookie Manipulation — explain exactly:
+    The server sets crew_role=crew in the browser.
+    The server trusts this cookie to decide access.
+    The player changes it to crew_role=admin.
+    The server sees "admin" and grants access.
+    This shows why you NEVER trust client-side data
+    for authorization decisions.
+
+12. MD5 — explain exactly:
+    MD5 is a hashing algorithm designed to be fast.
+    Fast = bad for passwords (easy to crack).
+    The hash 5f4dcc3b5aa765d61d8327deb882cf99
+    is the MD5 of "password" — found in every
+    rainbow table ever made.
+    Modern systems use bcrypt/argon2 (slow by design).
+    We use Werkzeug's generate_password_hash which
+    uses PBKDF2 — this is the right way.
