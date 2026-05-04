@@ -25,10 +25,38 @@ def register():
 
         new_user = User(
             username=username,
-            start_timing=datetime.now(),
+            start_time=datetime.utcnow(),
         )
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
 
+        login_user(new_user)
+        flash('Registration Successful!','success')
+        return redirect(url_for('dashboard.index'))
+
     return render_template('auth/register.html')
+
+@auth_bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard.index'))
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(username=username).first()
+
+        if user is None or not user.check_password(password):
+            flash('Invalid username or password','error')
+            return redirect(url_for('auth.login'))
+        login_user(user)
+        flash('You have been logged in','success')
+
+        next_page = request.args.get('next')
+        if not next_page:
+            next_page = url_for('dashboard.index')
+        return redirect(next_page)
+
+    return render_template('auth/login.html')
