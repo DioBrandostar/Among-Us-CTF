@@ -1,36 +1,84 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>📡 COMMUNICATIONS ROOM</h2>
-<p class="status">⚠️ Encrypted transmissions detected</p>
+<p class="status">{% if is_solved %}✅ SIGNAL STABILIZED{% else %}⚠️ Encrypted transmissions detected{% endif %}</p>
 
-<div class="challenge-box">
-    <p><strong>SCENARIO:</strong> The ship's communication logs contain hidden messages. Someone has been transmitting data outside the ship.</p>
-    <pre>Incoming stream: [ENCRYPTED DATA]
-Source: Unknown satellite
-Integrity: Compromised</pre>
-</div>
+<div class="comms-container">
+    <div class="radio-waves">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <span class="glitch-text">{% if is_solved %}📡 SIGNAL LOCK{% else %}📡 SIGNAL UNSTABLE{% endif %}</span>
+    </div>
 
-<form method="POST" class="flag-form">
-    <input type="text" name="flag" placeholder="FLAG{...}" required>
-    <button type="submit">SUBMIT FLAG</button>
-</form>
+    <div class="challenge-box">
+        <p><strong>SCENARIO:</strong> The radio is receiving a burst of MD5 hashes from an unknown source. Crack the hashes to identify the restore code and stabilize the signal.</p>
 
-<div class="hint-section">
-    {% set hints_count = current_user.get_used_hints_count('communications') %}
-    {% if hints_count > 0 %}
-        <div class="hints-display">
-            {% for i in range(1, hints_count + 1) %}
-                <div class="hint-item">
-                    <strong>💡 Hint {{ i }}:</strong> {{ get_hint_text('communications', i) }}
+        <div class="encrypted-stream">
+            {% if is_solved %}
+                <pre style="color:var(--success); border:none; background:none; padding:8px;">[DECODED TRANSMISSION]
+FROM: STATION HORIZON-7
+TO: ORION-9 COMMAND
+MESSAGE: ALL SYSTEMS NOMINAL. PROCEED WITH DOCKING.
+SUPPLIES READY FOR TRANSFER. WELCOME HOME.
+END TRANSMISSION.</pre>
+            {% else %}
+                <div style="font-size: 0.85rem; line-height: 1.8; padding: 8px;">
+                    d8578edf8458ce06fbc5bb76a58c5ca4<br>
+                    81dc9bdb52d04dc20036dbd8313ed055<br>
+                    5f4dcc3b5aa765d61d8327deb882cf99<br>
+                    202cb962ac59075b964b07152d234b70<br>
+                    098f6bcd4621d373cade4e832627b4f6
                 </div>
-            {% endfor %}
+            {% endif %}
+            <pre style="margin-top:10px; border:none; background:none; padding:0 8px;">Source: Unknown satellite
+Integrity: {% if is_solved %}Verified{% else %}Compromised{% endif %}</pre>
         </div>
-    {% endif %}
-    
-    {% if hints_count < 2 %}
-        <form action="{{ url_for('main.get_hint', room_name='communications') }}" method="POST" style="display:inline;">
-            <button type="submit" class="hint-btn">Request Hint (-{% if hints_count == 0 %}20{% else %}30{% endif %} points)</button>
-        </form>
-    {% endif %}
+    </div>
 </div>
+
+{% if not is_solved %}
+    {% if not show_flag %}
+    <form method="POST" class="flag-form">
+        <input type="hidden" name="action" value="restore">
+        <input type="text" name="code" placeholder="Enter decoded password to restore..." required>
+        <button type="submit">RESTORE SYSTEM</button>
+    </form>
+    {% else %}
+    <div style="background: rgba(76,175,80,0.1); border:1px solid rgba(76,175,80,0.3); border-radius:8px; padding:20px; margin-bottom:20px; text-align:center;">
+        <p style="color:var(--success); font-size:1.1rem; margin-bottom:5px;">🔓 SYSTEM ACCESS GRANTED</p>
+        <p style="color:var(--text-muted); font-size:0.9rem;">The override flag has been transmitted on the secure channel:</p>
+        <p style="font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:1.2rem; margin:15px 0; letter-spacing:1px;">FLAG{cookies_are_not_safe_in_space}</p>
+    </div>
+    <form method="POST" class="flag-form">
+        <input type="hidden" name="action" value="submit_flag">
+        <input type="text" name="flag" placeholder="FLAG{...}" required autofocus>
+        <button type="submit">SUBMIT FLAG</button>
+    </form>
+    {% endif %}
+
+    <div class="hint-section">
+        {% set hints_count = current_user.get_used_hints_count('communications') %}
+        {% if hints_count > 0 %}
+            <div class="hints-display">
+                {% for i in range(1, hints_count + 1) %}
+                    <div class="hint-item">
+                        <strong>💡 Hint {{ i }}:</strong> {{ get_hint_text('communications', i) }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if hints_count < 2 %}
+            <form action="{{ url_for('main.get_hint', room_name='communications') }}" method="POST" style="display:inline;">
+                <button type="submit" class="hint-btn">Request Hint (-20 points)</button>
+            </form>
+        {% endif %}
+    </div>
+{% else %}
+<div class="solved-banner">
+    <h3>✅ RADIO RESTORED</h3>
+    <p>Communication with the station has been re-established.</p>
+    <a href="{{ url_for('dashboard.index') }}" class="btn">Back to Dashboard</a>
+</div>
+{% endif %}
 {% endblock %}

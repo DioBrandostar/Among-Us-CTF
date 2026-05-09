@@ -1,13 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>⚡ ELECTRICAL ROOM</h2>
-<p class="status">⚠️ Power fluctuations detected</p>
+<p class="status">{% if is_solved %}✅ POWER STABILIZED{% else %}⚠️ Power fluctuations detected{% endif %}</p>
 
-<div class="challenge-box">
-    <p><strong>SCENARIO:</strong> The power logs show unauthorized access. Someone rerouted power from critical systems.</p>
-    <pre>Log Entry #447: User "guest" accessed breaker panel at 03:47 ship time.</pre>
+<div class="electrical-container">
+    <div class="flicker-overlay" {% if is_solved %}style="animation: none; opacity: 0;"{% endif %}></div>
+
+    <div class="bulb-row">
+        <div class="bulb {% if is_solved %}stable{% else %}flickering{% endif %}" style="animation-delay: 0s;">💡</div>
+        <div class="bulb {% if is_solved %}stable{% else %}flickering{% endif %}" style="animation-delay: 0.3s;">💡</div>
+        <div class="bulb {% if is_solved %}stable{% else %}flickering{% endif %}" style="animation-delay: 0.7s;">💡</div>
+        <div class="bulb {% if is_solved %}stable{% else %}flickering{% endif %}" style="animation-delay: 1.1s;">💡</div>
+        <div class="bulb {% if is_solved %}stable{% else %}flickering{% endif %}" style="animation-delay: 0.5s;">💡</div>
+    </div>
+
+    <div class="challenge-box">
+        <p><strong>SCENARIO:</strong> The ship's power grid is unstable. Someone has been tampering with the internal circuitry.</p>
+        {% if is_solved %}
+            <p style="color:var(--success);">The breaker panel has been reset. Power is flowing normally to all sectors.</p>
+        {% else %}
+            <pre>System Status: COMPROMISED
+Internal Logs: Access Point B-12 bypassed.</pre>
+        {% endif %}
+    </div>
 </div>
 
+{% if not is_solved %}
+<!-- 🕵️ Ship Engineer's Note: The emergency restore code is FLAG{voltage_spike_77} -->
 <form method="POST" class="flag-form">
     <input type="text" name="flag" placeholder="FLAG{...}" required>
     <button type="submit">SUBMIT FLAG</button>
@@ -24,11 +43,17 @@
             {% endfor %}
         </div>
     {% endif %}
-    
     {% if hints_count < 2 %}
         <form action="{{ url_for('main.get_hint', room_name='electrical') }}" method="POST" style="display:inline;">
-            <button type="submit" class="hint-btn">Request Hint (-{% if hints_count == 0 %}20{% else %}30{% endif %} points)</button>
+            <button type="submit" class="hint-btn">Request Hint (-20 points)</button>
         </form>
     {% endif %}
 </div>
+{% else %}
+<div class="solved-banner">
+    <h3>✅ SYSTEM SECURED</h3>
+    <p>The power grid is operational. All sectors receiving stable voltage.</p>
+    <a href="{{ url_for('dashboard.index') }}" class="btn">Back to Dashboard</a>
+</div>
+{% endif %}
 {% endblock %}

@@ -56,9 +56,11 @@ def create_app(config_name=None):
         from flask_login import current_user
         from app.services.clue_engine import get_unlocked_clues
         from app.services.hint_engine import get_hint_text
+        from app.services.flag_validator import ROOM_POINTS
         return dict(
             unlocked_clues=get_unlocked_clues(current_user),
-            get_hint_text=get_hint_text
+            get_hint_text=get_hint_text,
+            ROOM_POINTS=ROOM_POINTS
         )
 
     with app.app_context():

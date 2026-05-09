@@ -1,13 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>☢️ REACTOR ROOM</h2>
-<p class="status">⚠️ Reactor temperature critical</p>
+<p class="status">{% if is_solved %}✅ REACTOR NOMINAL{% else %}⚠️ Reactor temperature critical{% endif %}</p>
 
-<div class="challenge-box">
-    <p><strong>SCENARIO:</strong> The reactor's safety override was disabled. A hash was left in the system logs from the saboteur.</p>
-    <pre>MD5 Hash: 482c811da5d5b4bc6d497ffa98491e38</pre>
+<div class="reactor-container">
+    <div class="core-wrapper">
+        <div class="core-pulsar" {% if is_solved %}style="animation: none; opacity: 0.3; transform: scale(1);"{% endif %}></div>
+        <div class="core-inner" {% if is_solved %}style="box-shadow: 0 0 30px var(--success), 0 0 60px var(--success);"{% endif %}></div>
+    </div>
+    <div class="temp-gauge" {% if is_solved %}style="color:var(--success); text-shadow: 0 0 10px var(--success);"{% endif %}>{% if is_solved %}312 K{% else %}3,482 K{% endif %}</div>
+    <div class="temp-warning" {% if is_solved %}style="color:var(--success); animation:none;"{% endif %}>{% if is_solved %}CORE TEMPERATURE NOMINAL{% else %}CORE OVERHEAT IMMINENT{% endif %}</div>
+
+    <div class="challenge-box" style="margin-top:20px;">
+        <p><strong>SCENARIO:</strong> The reactor's safety override was disabled. A hash was left in the system logs from the saboteur.</p>
+        <pre>MD5 Hash: 482c811da5d5b4bc6d497ffa98491e38</pre>
+    </div>
 </div>
 
+{% if not is_solved %}
 <form method="POST" class="flag-form">
     <input type="text" name="flag" placeholder="FLAG{...}" required>
     <button type="submit">SUBMIT FLAG</button>
@@ -24,11 +34,17 @@
             {% endfor %}
         </div>
     {% endif %}
-    
     {% if hints_count < 2 %}
         <form action="{{ url_for('main.get_hint', room_name='reactor') }}" method="POST" style="display:inline;">
-            <button type="submit" class="hint-btn">Request Hint (-{% if hints_count == 0 %}20{% else %}30{% endif %} points)</button>
+            <button type="submit" class="hint-btn">Request Hint (-20 points)</button>
         </form>
     {% endif %}
 </div>
+{% else %}
+<div class="solved-banner">
+    <h3>✅ REACTOR STABLE</h3>
+    <p>Temperature returning to nominal levels. Coolant systems operational.</p>
+    <a href="{{ url_for('dashboard.index') }}" class="btn">Back to Dashboard</a>
+</div>
+{% endif %}
 {% endblock %}

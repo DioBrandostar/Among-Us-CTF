@@ -9,14 +9,12 @@ reactor_bp = Blueprint('reactor', __name__)
 def room():
     if not current_user.start_time:
         return redirect(url_for('main.briefing'))
-    if current_user.has_fixed_room('reactor'):
-        flash('Reactor already fixed', 'info')
-        return redirect(url_for('dashboard.index'))
 
-    if request.method == 'POST':
+    is_solved = current_user.has_fixed_room('reactor')
+
+    if request.method == 'POST' and not is_solved:
         submitted_flag = request.form.get('flag', '')
         result = flag_validator.validate_flag(current_user, 'reactor', submitted_flag)
-
         if result['success']:
             flash(result['message'], 'success')
             return redirect(url_for('dashboard.index'))
@@ -24,4 +22,4 @@ def room():
             flash(result['message'], 'danger')
             return redirect(url_for('reactor.room'))
 
-    return render_template('rooms/reactor/room.html')
+    return render_template('rooms/reactor/room.html', is_solved=is_solved)

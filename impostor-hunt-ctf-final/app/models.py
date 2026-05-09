@@ -81,7 +81,12 @@ class User(UserMixin, db.Model):
             hint_number=hint_number
         ).first() is not None
 
-    def __repr__(self): #like @StringName
+    def get_fixed_rooms_with_points(self):
+        """Returns a dictionary mapping room_name to points awarded."""
+        fixes = RoomFix.query.filter_by(user_id=self.id).all()
+        return {fix.room_name: fix.points for fix in fixes}
+
+    def __repr__(self):
         return f'<User {self.username}>'
 
 

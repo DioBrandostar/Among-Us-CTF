@@ -63,9 +63,21 @@ def final_room():
         submitted_flag = request.form.get('flag', '').strip()
         if submitted_flag == 'FLAG{impostor_ejected_gg_wp_crewmate}':
             current_user.completion_time = datetime.utcnow()
-            current_user.total_score += 400
-            db.session.commit()
-            flash('🎉 IMPOSTOR EJECTED! The ship is safe!', 'success')
+            
+            # Record the final room fix
+            from app.models import RoomFix
+            final_fix = RoomFix(
+                user_id=current_user.id,
+                room_name='final',
+                points=400,
+                fixed_at=datetime.utcnow()
+            )
+            db.session.add(final_fix)
+            
+            from app.services.scoring import sync_user_score
+            sync_user_score(current_user)
+            
+            flash('🎉 <strong style="font-size:1.2rem;">IMPOSTOR EJECTED!</strong><br>The ship is safe! Final Reward: <span style="color:var(--amber); font-weight:700;">400 Points</span>', 'success')
             return redirect(url_for('emergency.victory'))
         else:
             flash('❌ Wrong override code. The airlock remains locked!', 'danger')

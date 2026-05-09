@@ -3,7 +3,7 @@ from app.models import RoomFix, FlagSubmission
 from datetime import datetime
 
 ROOM_FLAGS = {
-    'electrical':     'FLAG{lights_out_in_electrical}',
+    'electrical':     'FLAG{voltage_spike_77}',
     'cafeteria':      'FLAG{space_food_is_sus}',
     'medbay':         'FLAG{idor_body_reported}',
     'security':       'FLAG{sus_black_was_here}',
@@ -123,7 +123,7 @@ def validate_flag(user, room_name, submitted_flag):
     return {
         'success':        True,
         'already_solved': False,
-        'message':        f'🎉 Correct! Room fixed! +{points} points!',
+        'message':        f'🎉 <strong style="font-size:1.1rem;">SYSTEM RESTORED!</strong><br>Points Earned: <span style="color:var(--amber); font-weight:700;">{final_room_points} Points</span>',
         'points':         points,
         'all_fixed':      user.all_rooms_fixed,
         'redirect':       f'/room/{room_name}'

@@ -1,13 +1,81 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>🏥 MEDBAY</h2>
-<p class="status">⚠️ Medical records altered</p>
+<p class="status">{% if is_solved %}✅ RECORDS SECURED{% else %}⚠️ Medical records altered{% endif %}</p>
 
-<div class="challenge-box">
-    <p><strong>SCENARIO:</strong> Someone tried to access medical records without authorization. The system left a trace.</p>
-    <pre>Access Denied: User ID 5 attempted to view Patient #1337 records.</pre>
+<div class="medbay-container">
+    <div class="ekg-box">
+        <div class="ekg-line"></div>
+    </div>
+
+    <div class="challenge-box">
+        <p><strong>SCENARIO:</strong> The medbay system stores medical reports for all 8 crew members. You are assigned <strong style="color:var(--amber);">ID #8</strong>. Only your own record should be accessible.</p>
+    </div>
+
+    <!-- Crew roster -->
+    <div class="crew-roster">
+        <h3 style="color:var(--teal); margin-bottom:12px;">👥 CREW ROSTER ({{ 7 + 1 }} members)</h3>
+        <table class="menu-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cid, rec in crew_records.items() %}
+                <tr>
+                    <td>#{{ cid }}</td>
+                    <td>{{ rec.name }}</td>
+                    <td>{{ rec.role }}</td>
+                    <td>
+                        <a href="{{ url_for('medbay.room', id=cid) }}" class="btn" style="padding:4px 12px; font-size:0.75rem;">View Report</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr style="background:rgba(245,166,35,0.1);">
+                    <td>#8</td>
+                    <td>{{ user_record.name }} (You)</td>
+                    <td>{{ user_record.role }}</td>
+                    <td>
+                        <a href="{{ url_for('medbay.room', id=8) }}" class="btn" style="padding:4px 12px; font-size:0.75rem;">View Report</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Viewed medical report -->
+    {% if viewed_record %}
+    <div class="medical-report" style="margin-top:20px;">
+        <h3 style="color:var(--teal); margin-bottom:12px;">📋 MEDICAL REPORT — ID #{{ view_id }}</h3>
+        <div class="report-card {% if viewed_record.corrupted and not is_solved %}corrupted{% endif %}">
+            <div class="report-row"><span class="report-label">Name:</span> <span>{{ viewed_record.name }}</span></div>
+            <div class="report-row"><span class="report-label">Role:</span> <span>{{ viewed_record.role }}</span></div>
+            <div class="report-row"><span class="report-label">Blood Type:</span> <span>{{ viewed_record.blood_type }}</span></div>
+            <div class="report-row"><span class="report-label">Heart Rate:</span> <span>{{ viewed_record.heart_rate }}</span></div>
+            <div class="report-row"><span class="report-label">Status:</span> <span style="color:{% if viewed_record.status == 'HEALTHY' %}var(--success){% else %}var(--coral){% endif %}; font-weight:700;">{{ viewed_record.status }}</span></div>
+            <div class="report-row"><span class="report-label">Notes:</span> <span>{{ viewed_record.notes }}</span></div>
+        </div>
+    </div>
+    {% elif view_id == 8 %}
+    <div class="medical-report" style="margin-top:20px;">
+        <h3 style="color:var(--teal); margin-bottom:12px;">📋 MEDICAL REPORT — ID #8 (YOUR FILE)</h3>
+        <div class="report-card">
+            <div class="report-row"><span class="report-label">Name:</span> <span>{{ user_record.name }}</span></div>
+            <div class="report-row"><span class="report-label">Role:</span> <span>{{ user_record.role }}</span></div>
+            <div class="report-row"><span class="report-label">Blood Type:</span> <span>{{ user_record.blood_type }}</span></div>
+            <div class="report-row"><span class="report-label">Heart Rate:</span> <span>{{ user_record.heart_rate }}</span></div>
+            <div class="report-row"><span class="report-label">Status:</span> <span style="color:var(--success); font-weight:700;">{{ user_record.status }}</span></div>
+            <div class="report-row"><span class="report-label">Notes:</span> <span>{{ user_record.notes }}</span></div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
+{% if not is_solved %}
 <form method="POST" class="flag-form">
     <input type="text" name="flag" placeholder="FLAG{...}" required>
     <button type="submit">SUBMIT FLAG</button>
@@ -24,11 +92,17 @@
             {% endfor %}
         </div>
     {% endif %}
-    
     {% if hints_count < 2 %}
         <form action="{{ url_for('main.get_hint', room_name='medbay') }}" method="POST" style="display:inline;">
-            <button type="submit" class="hint-btn">Request Hint (-{% if hints_count == 0 %}20{% else %}30{% endif %} points)</button>
+            <button type="submit" class="hint-btn">Request Hint (-20 points)</button>
         </form>
     {% endif %}
 </div>
+{% else %}
+<div class="solved-banner">
+    <h3>✅ PATIENT RECORDS SECURED</h3>
+    <p>Medical database integrity has been restored. All scans are clean.</p>
+    <a href="{{ url_for('dashboard.index') }}" class="btn">Back to Dashboard</a>
+</div>
+{% endif %}
 {% endblock %}

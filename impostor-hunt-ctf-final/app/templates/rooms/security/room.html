@@ -1,15 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>🔐 SECURITY ROOM</h2>
-<p class="status">⚠️ Camera footage deleted</p>
+<p class="status">{% if is_solved %}✅ FOOTAGE RECOVERED{% else %}⚠️ Camera footage deleted{% endif %}</p>
 
-<div class="challenge-box">
-    <p><strong>SCENARIO:</strong> The security cameras were disabled during the sabotage. Metadata from a deleted file was recovered.</p>
-    <pre>Recovered file: deleted_footage.mp4
+<div class="security-container">
+    <div class="cctv-feed">
+        <div class="cctv-static"></div>
+        <div class="cctv-scanline"></div>
+        <div class="cctv-text">
+            <span class="rec-dot"></span> REC [CAM-04] <br>
+            2147-10-12 03:22:15
+        </div>
+    </div>
+
+    <div class="challenge-box">
+        <p><strong>SCENARIO:</strong> The security cameras were disabled during the sabotage. Metadata from a deleted file was recovered.</p>
+        <pre>Recovered file: deleted_footage.mp4
 Size: 12.4 MB
 Timestamp: 03:22 ship time</pre>
+    </div>
 </div>
 
+{% if not is_solved %}
 <form method="POST" class="flag-form">
     <input type="text" name="flag" placeholder="FLAG{...}" required>
     <button type="submit">SUBMIT FLAG</button>
@@ -26,11 +38,17 @@ Timestamp: 03:22 ship time</pre>
             {% endfor %}
         </div>
     {% endif %}
-    
     {% if hints_count < 2 %}
         <form action="{{ url_for('main.get_hint', room_name='security') }}" method="POST" style="display:inline;">
-            <button type="submit" class="hint-btn">Request Hint (-{% if hints_count == 0 %}20{% else %}30{% endif %} points)</button>
+            <button type="submit" class="hint-btn">Request Hint (-20 points)</button>
         </form>
     {% endif %}
 </div>
+{% else %}
+<div class="solved-banner">
+    <h3>✅ CAMERA FEED RESTORED</h3>
+    <p>Security footage is now backing up correctly.</p>
+    <a href="{{ url_for('dashboard.index') }}" class="btn">Back to Dashboard</a>
+</div>
+{% endif %}
 {% endblock %}

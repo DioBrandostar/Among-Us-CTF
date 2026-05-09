@@ -1,15 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>🖥️ ADMIN TERMINAL</h2>
-<p class="status">⚠️ Unauthorized admin access detected</p>
+<p class="status">{% if is_solved %}✅ ADMIN ACCESS SECURED{% else %}⚠️ Unauthorized admin access detected{% endif %}</p>
 
-<div class="challenge-box">
-    <p><strong>SCENARIO:</strong> Someone logged into the admin panel without proper credentials. A script was injected into the system.</p>
-    <pre>Search log:
-- Attempt 1: "ship logs" -> 0 results
-- Attempt 2: "impostor" -> ACCESS DENIED</pre>
+<div class="admin-container">
+    <div class="terminal-header">
+        <span>SSH: root@horizon-7-admin</span>
+        <span>X</span>
+    </div>
+    <div class="terminal-body">
+        <span class="typing-text">>>> searching for "impostor"...</span>
+        <div class="log-scroll">
+            - Attempt 1: "ship logs" -> 0 results <br>
+            - Attempt 2: "impostor" -> <span style="color:var(--coral);">ACCESS DENIED</span> <br>
+            - [SYSTEM] UNAUTHORIZED BYPASS DETECTED <br>
+            - [SYSTEM] INITIATING TRACE... <br>
+            - [SYSTEM] TRACE FAILED: ENCRYPTION TOO STRONG
+        </div>
+    </div>
+
+    <div class="challenge-box" style="margin-top:20px; background:rgba(255,255,255,0.05);">
+        <p><strong>SCENARIO:</strong> Someone logged into the admin panel without proper credentials. A script was injected into the system.</p>
+    </div>
 </div>
 
+{% if not is_solved %}
 <form method="POST" class="flag-form">
     <input type="text" name="flag" placeholder="FLAG{...}" required>
     <button type="submit">SUBMIT FLAG</button>
@@ -26,11 +41,17 @@
             {% endfor %}
         </div>
     {% endif %}
-    
     {% if hints_count < 2 %}
         <form action="{{ url_for('main.get_hint', room_name='admin_terminal') }}" method="POST" style="display:inline;">
-            <button type="submit" class="hint-btn">Request Hint (-{% if hints_count == 0 %}20{% else %}30{% endif %} points)</button>
+            <button type="submit" class="hint-btn">Request Hint (-20 points)</button>
         </form>
     {% endif %}
 </div>
+{% else %}
+<div class="solved-banner">
+    <h3>✅ TERMINAL SECURED</h3>
+    <p>Unauthorized scripts have been purged from the system.</p>
+    <a href="{{ url_for('dashboard.index') }}" class="btn">Back to Dashboard</a>
+</div>
+{% endif %}
 {% endblock %}

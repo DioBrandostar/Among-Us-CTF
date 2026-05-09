@@ -1,16 +1,56 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>🍕 CAFETERIA</h2>
-<p class="status">⚠️ Food storage tampered with</p>
+<p class="status">{% if is_solved %}✅ FOOD STORAGE SECURED{% else %}⚠️ Food storage tampered with{% endif %}</p>
 
-<div class="challenge-box">
-    <p><strong>SCENARIO:</strong> A crew member's personal terminal was left open. Their password is stored as a hash in the system.</p>
-    <pre>Energy logs:
-- Fridge system #1: Online
-- Auto-chef #4: Sabotaged
-- Trash compactor: Critical error</pre>
+<div class="cafeteria-container">
+    <div class="food-pouch-area">
+        <div class="food-pouch">🍱</div>
+        <div class="food-pouch">🥤</div>
+        <div class="food-pouch">🍎</div>
+    </div>
+
+    <div class="challenge-box">
+        <p><strong>SCENARIO:</strong> The digital menu display has been corrupted. All items appear as encoded strings. Decode the menu to find the saboteur's hidden message.</p>
+
+        <table class="menu-table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Item</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🌅 Breakfast</td>
+                    <td>{% if is_solved %}Space Pancakes{% else %}U3BhY2UgUGFuY2FrZXM={% endif %}</td>
+                </tr>
+                <tr>
+                    <td>🥪 Lunch</td>
+                    <td>{% if is_solved %}Asteroid Burger{% else %}QXN0ZXJvaWQgQnVyZ2Vy{% endif %}</td>
+                </tr>
+                <tr>
+                    <td>🍝 Dinner</td>
+                    <td>{% if is_solved %}Nebula Noodles{% else %}TmVidWxhIE5vb2RsZXM={% endif %}</td>
+                </tr>
+                <tr>
+                    <td>🍫 Snacks</td>
+                    <td>{% if is_solved %}FLAG{space_food_is_sus}{% else %}RkxBR3tzcGFjZV9mb29kX2lzX3N1c30={% endif %}</td>
+                </tr>
+                <tr>
+                    <td>🥤 Beverage</td>
+                    <td>{% if is_solved %}Star Juice{% else %}U3RhciBKdWljZQ=={% endif %}</td>
+                </tr>
+                <tr>
+                    <td>🍰 Dessert</td>
+                    <td>{% if is_solved %}Comet Cake{% else %}Q29tZXQgQ2FrZQ=={% endif %}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
+{% if not is_solved %}
 <form method="POST" class="flag-form">
     <input type="text" name="flag" placeholder="FLAG{...}" required>
     <button type="submit">SUBMIT FLAG</button>
@@ -27,11 +67,17 @@
             {% endfor %}
         </div>
     {% endif %}
-    
     {% if hints_count < 2 %}
         <form action="{{ url_for('main.get_hint', room_name='cafeteria') }}" method="POST" style="display:inline;">
-            <button type="submit" class="hint-btn">Request Hint (-{% if hints_count == 0 %}20{% else %}30{% endif %} points)</button>
+            <button type="submit" class="hint-btn">Request Hint (-20 points)</button>
         </form>
     {% endif %}
 </div>
+{% else %}
+<div class="solved-banner">
+    <h3>✅ MENU RESTORED</h3>
+    <p>The nutrition systems are back online. All menu items decoded.</p>
+    <a href="{{ url_for('dashboard.index') }}" class="btn">Back to Dashboard</a>
+</div>
+{% endif %}
 {% endblock %}

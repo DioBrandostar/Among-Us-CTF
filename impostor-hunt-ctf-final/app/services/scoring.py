@@ -3,7 +3,7 @@ from app.models import RoomFix, HintUsage
 
 POINTS_PER_ROOM = 100
 HINT_1_PENALTY = 20
-HINT_2_PENALTY = 30
+HINT_2_PENALTY = 20
 
 def calculate_user_score(user):
     """Calculates the total score for a user based on rooms fixed."""

@@ -54,6 +54,6 @@ def get_hint(room_name):
         )
         db.session.add(new_hint)
         db.session.commit()
-        flash(f"Hint revealed! The room's value has decreased by {penalty} points.", "warning")
+        flash("💡 Intel recovered! Investigation penalty applied to room value.", "info")
     
     return redirect(url_for(f'{room_name}.room'))

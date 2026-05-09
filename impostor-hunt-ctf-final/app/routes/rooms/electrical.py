@@ -10,19 +10,18 @@ electrical_bp = Blueprint('electrical', __name__)
 def room():
     if not current_user.start_time:
         return redirect(url_for('main.briefing'))
-    if current_user.has_fixed_room('electrical'):
-        flash('Electrical already solved', 'info')
-        return redirect(url_for('dashboard.index'))
-        
-    if request.method == 'POST':
+
+    is_solved = current_user.has_fixed_room('electrical')
+
+    if request.method == 'POST' and not is_solved:
         submitted_flag = request.form.get('flag', '')
         result = flag_validator.validate_flag(current_user, 'electrical', submitted_flag)
-        
+
         if result['success']:
             flash(result['message'], 'success')
             return redirect(url_for('dashboard.index'))
         else:
             flash(result['message'], 'danger')
             return redirect(url_for('electrical.room'))
-            
-    return render_template('rooms/electrical/room.html')
+
+    return render_template('rooms/electrical/room.html', is_solved=is_solved)

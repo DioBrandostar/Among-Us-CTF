@@ -8,7 +8,7 @@ dashboard_bp = Blueprint('dashboard', __name__)
 def index():
     if not current_user.start_time:
         return redirect(url_for('main.briefing'))
-    fixed_rooms = current_user.get_fixed_rooms()
+    fixed_rooms = current_user.get_fixed_rooms_with_points()
 
     progress_count = current_user.get_rooms_fixed_count()
 

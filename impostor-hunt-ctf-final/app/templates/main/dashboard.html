@@ -7,9 +7,9 @@
 
 <div class="room-grid">
     {% set rooms = [
-        ('communications', '📡', 'Communications', 'Restore ship-wide messaging'),
-        ('electrical', '⚡', 'Electrical', 'Stabilize power grid'),
         ('cafeteria', '🍕', 'Cafeteria', 'Secure food storage'),
+        ('electrical', '⚡', 'Electrical', 'Stabilize power grid'),
+        ('communications', '📡', 'Communications', 'Restore ship-wide messaging'),
         ('medbay', '🏥', 'Medbay', 'Protect medical records'),
         ('reactor', '☢️', 'Reactor', 'Cool reactor core'),
         ('security', '🔐', 'Security', 'Restore surveillance'),
@@ -22,11 +22,21 @@
                 <strong>{{ name }}</strong>
                 <small style="color:var(--text-muted); display:block; margin-bottom:4px;">{{ desc }}</small>
                 <span class="status">
-                    {% if room_id in fixed_rooms %}✅ Operational{% else %}⚠️ Needs repair{% endif %}
+                    {% if room_id in fixed_rooms %}
+                        <span class="status-fixed">✅ OPERATIONAL</span>
+                        <span class="pts-highlight">{{ fixed_rooms.get(room_id) }} PTS</span>
+                    {% else %}
+                        <span class="status-broken">⚠️ OFFLINE</span>
+                        <span class="pts-info">{{ ROOM_POINTS.get(room_id, 0) }} PTS</span>
+                    {% endif %}
                 </span>
-                {% if room_id not in fixed_rooms %}
-                    <a href="{{ url_for(room_id + '.room') }}" class="btn">Begin Repair</a>
-                {% endif %}
+                <div style="margin-top:10px;">
+                    {% if room_id in fixed_rooms %}
+                        <a href="{{ url_for(room_id + '.room') }}" class="btn btn-solved">Enter Room</a>
+                    {% else %}
+                        <a href="{{ url_for(room_id + '.room') }}" class="btn">Begin Repair</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     {% endfor %}

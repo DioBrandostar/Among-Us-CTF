@@ -9,11 +9,10 @@ admin_terminal_bp = Blueprint('admin_terminal', __name__)
 def room():
     if not current_user.start_time:
         return redirect(url_for('main.briefing'))
-    if current_user.has_fixed_room('admin_terminal'):
-        flash('Admin Terminal is already fixed')
-        return redirect(url_for('dashboard.index'))
 
-    if request.method == 'POST':
+    is_solved = current_user.has_fixed_room('admin_terminal')
+
+    if request.method == 'POST' and not is_solved:
         submitted_flag = request.form.get('flag')
         result = flag_validator.validate_flag(current_user, 'admin_terminal', submitted_flag)
         if result['success']:
@@ -23,4 +22,4 @@ def room():
             flash(result['message'], 'danger')
             return redirect(url_for('admin_terminal.room'))
 
-    return render_template('rooms/admin_terminal/room.html')
+    return render_template('rooms/admin_terminal/room.html', is_solved=is_solved)
