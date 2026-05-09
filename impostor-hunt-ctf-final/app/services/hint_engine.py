@@ -1,31 +1,31 @@
 HINTS = {
     'electrical': [
         "The source code is visible in the browser's developer tools. Check the script section.",
-        "The flag is hardcoded as a variable in the JavaScript logic. Look for 'const flag' or similar."
+        "Look for a JavaScript variable named 'flag' or something similar inside the main script tag. It's listed right there in the source code!"
     ],
     'cafeteria': [
         "The strange string in the console looks like it's encoded in Base64.",
-        "Use a Base64 decoder online or in Python (`base64.b64decode`) to reveal the flag."
+        "That long string of characters ending in '=' is definitely Base64. Copy it into an online Base64 decoder to see the clear text flag."
     ],
     'medbay': [
         "The URL contains an ID. Try changing it to see other users' scan results.",
-        "ID 1 belongs to the suspect. Accessing `/room/medbay/scan?id=1` will reveal their hidden record."
+        "The suspect's data is at ID 1. Change the `?id=5` in your browser's address bar to `?id=1` and hit enter."
     ],
     'security': [
         "The logs show a lot of noise. Focus on entries that mention 'vent' or 'unauthorized'.",
-        "Search for the specific timestamp mentioned in the briefing to find the anomaly."
+        "There is a specific log entry that contains a quoted string about 'black' being suspicious. That quoted string is your flag!"
     ],
     'communications': [
         "The server checks your 'role' from a cookie. Check your browser's cookies.",
-        "Change the `crew_role` cookie from `crew` to `admin` and refresh the page."
+        "Use your browser's inspect tool (F12) -> Application -> Cookies. Change the value of `crew_role` from `crew` to `admin` and then refresh the page."
     ],
     'reactor': [
         "The password hash is MD5. It's a very common hash that can be easily cracked.",
-        "The hash `5f4dcc3b5aa765d61d8327deb882cf99` is the MD5 for 'password'. Use it to log in."
+        "Search for this hash `5f4dcc3b5aa765d61d8327deb882cf99` on a site like CrackStation. It will give you a very common word as the answer."
     ],
     'admin_terminal': [
         "The search bar doesn't sanitize input. Try injecting a script tag like `<script>alert(1)</script>`.",
-        "The goal is to steal the session cookie. Use JavaScript to read `document.cookie`."
+        "Try putting `<script>alert(document.cookie)</script>` into the search box. The alert that pops up will show you the session data flag."
     ]
 }
 

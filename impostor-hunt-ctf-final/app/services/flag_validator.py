@@ -76,16 +76,26 @@ def validate_flag(user, room_name, submitted_flag):
             'redirect':       None
         }
     
-    points                    = ROOM_POINTS.get(room_name, 0)
+    points = ROOM_POINTS.get(room_name, 0)
+    
+    # Subtract hint penalties for this specific room
+    from app.models import HintUsage
+    hint_penalties = db.session.query(db.func.sum(HintUsage.points_lost)).filter_by(
+        user_id=user.id, 
+        room_name=room_name
+    ).scalar() or 0
+    
+    final_room_points = max(0, points - hint_penalties)
+    
     submission.is_correct     = True
-    submission.points_awarded = points
+    submission.points_awarded = final_room_points
     db.session.add(submission)
     
     if room_name != 'final':
         fix = RoomFix(
             user_id   = user.id,
             room_name = room_name,
-            points    = points,
+            points    = final_room_points,
             fixed_at  = datetime.utcnow()
         )
         db.session.add(fix)

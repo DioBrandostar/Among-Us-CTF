@@ -110,15 +110,28 @@ body::after {
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border-bottom: 1px solid var(--border);
-    padding: 14px 24px;
+    padding: 10px 24px;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: space-between;
+    margin-left: 20px;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .navbar a {
@@ -131,7 +144,6 @@ body::after {
     transition: all 0.25s;
     white-space: nowrap;
     letter-spacing: 0.3px;
-    background: rgba(255, 255, 255, 0.03);
 }
 
 .navbar a:hover {
@@ -141,11 +153,23 @@ body::after {
     transform: translateY(-1px);
 }
 
-.navbar a:first-child {
+.btn-nav-frame {
+    border: 1px solid var(--teal) !important;
+    background: rgba(58, 155, 155, 0.1) !important;
+    box-shadow: 0 0 10px rgba(58, 155, 155, 0.2);
+}
+
+.btn-nav-frame:hover {
+    background: rgba(58, 155, 155, 0.2) !important;
+    box-shadow: 0 0 20px rgba(58, 155, 155, 0.4) !important;
+}
+
+.navbar .nav-brand a {
     font-weight: 700;
     font-size: 1rem;
     background: rgba(245, 166, 35, 0.1);
     border: 1px solid rgba(245, 166, 35, 0.3);
+    color: var(--amber);
 }
 
 .navbar .crewmate {

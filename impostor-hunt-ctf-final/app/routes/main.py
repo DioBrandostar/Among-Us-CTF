@@ -53,7 +53,7 @@ def get_hint(room_name):
             points_lost=penalty
         )
         db.session.add(new_hint)
-        sync_user_score(current_user)
-        flash(f"Hint revealed! -{penalty} points.", "warning")
+        db.session.commit()
+        flash(f"Hint revealed! The room's value has decreased by {penalty} points.", "warning")
     
     return redirect(url_for(f'{room_name}.room'))

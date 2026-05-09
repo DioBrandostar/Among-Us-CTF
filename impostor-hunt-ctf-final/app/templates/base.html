@@ -17,32 +17,38 @@
         
         <div class="nav-links">
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('dashboard.index') }}">📟 Brief</a>
-                
-                <div class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">🔍 Clues ({{ unlocked_clues|length }})</a>
-                    <div class="dropdown-content">
-                        {% if unlocked_clues %}
-                            {% for clue in unlocked_clues %}
-                                <div class="dropdown-item">
-                                    <span class="clue-title">{{ clue.room }}</span>
-                                    <span class="clue-text">{{ clue.text }}</span>
+                <div class="nav-left">
+                    <a href="{{ url_for('dashboard.index') }}">📟 Brief</a>
+                    
+                    <div class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn">🔍 Clues ({{ unlocked_clues|length }})</a>
+                        <div class="dropdown-content">
+                            {% if unlocked_clues %}
+                                {% for clue in unlocked_clues %}
+                                    <div class="dropdown-item">
+                                        <span class="clue-title">{{ clue.room }}</span>
+                                        <span class="clue-text">{{ clue.text }}</span>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="dropdown-item empty">
+                                    No clues discovered yet. Fix station rooms to gather intel.
                                 </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="dropdown-item empty">
-                                No clues discovered yet. Fix station rooms to gather intel.
-                            </div>
-                        {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
 
-                <a href="{{ url_for('scoreboard.scoreboard') }}">🏆 Leaderboard</a>
-                <span class="crewmate">👤 {{ current_user.username }}</span>
-                <a href="{{ url_for('auth.logout') }}">🚪 Exit</a>
+                <div class="nav-right">
+                    <a href="{{ url_for('scoreboard.scoreboard') }}" class="btn-nav-frame">🏆 Leaderboard</a>
+                    <span class="crewmate">👤 {{ current_user.username }}</span>
+                    <a href="{{ url_for('auth.logout') }}">🚪 Exit</a>
+                </div>
             {% else %}
-                <a href="{{ url_for('auth.login') }}">🔐 Login</a>
-                <a href="{{ url_for('auth.register') }}">✨ Join</a>
+                <div class="nav-right">
+                    <a href="{{ url_for('auth.login') }}">🔐 Login</a>
+                    <a href="{{ url_for('auth.register') }}">✨ Join</a>
+                </div>
             {% endif %}
         </div>
     </nav>
