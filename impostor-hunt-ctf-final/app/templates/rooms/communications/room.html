@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📡 COMMUNICATIONS ROOM</h2>
+<p class="status">⚠️ Encrypted transmissions detected</p>
+
+<div class="challenge-box">
+    <p><strong>SCENARIO:</strong> The ship's communication logs contain hidden messages. Someone has been transmitting data outside the ship.</p>
+    <pre>RkxBR3tjb29raWVzX2FyZV9ub3Rfc2FmZV9pbl9zcGFjZX0=</pre>
+    <p><em>Hint: This looks like Base64 encoding... but something feels off. Maybe try decoding it directly?</em></p>
+</div>
+
+<form method="POST" class="flag-form">
+    <input type="text" name="flag" placeholder="FLAG{...}" required>
+    <button type="submit">SUBMIT FLAG</button>
+</form>
+
+<button class="hint-btn" disabled>Request Hint (Coming Soon)</button>
+{% endblock %}

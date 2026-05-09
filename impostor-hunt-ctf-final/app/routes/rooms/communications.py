@@ -14,7 +14,7 @@ def room():
     if request.method == 'POST':
         submitted_flag = request.form.get('flag', '')
         result = flag_validator.validate_flag(current_user, 'communications', submitted_flag)
-        if result['success']:                    # was result('success')
+        if result['success']:
             flash(result['message'], 'success')
             return redirect(url_for('dashboard.index'))
         else:

@@ -4,11 +4,11 @@ from flask_login import login_required, current_user
 
 admin_terminal_bp = Blueprint('admin_terminal', __name__)
 
-@admin_terminal_bp.route('/admin_terminal', methods=['GET', 'POST'])   # added methods
+@admin_terminal_bp.route('/admin_terminal', methods=['GET', 'POST'])
 @login_required
 def room():
     if current_user.has_fixed_room('admin_terminal'):
-        flash('admin_terminal is already fixed')
+        flash('Admin Terminal is already fixed')
         return redirect(url_for('dashboard.index'))
 
     if request.method == 'POST':

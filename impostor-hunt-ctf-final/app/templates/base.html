@@ -9,23 +9,20 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="{{ url_for('main.home') }}">IMPOSTOR HUNT</a>
-        <a href="{{ url_for('dashboard.index') }}">STATION DASHBOARD</a>
-
-        <!-- All room links (correct endpoints) -->
-        <a href="{{ url_for('communications.room') }}">COMMS</a>
-        <a href="{{ url_for('electrical.room') }}">ELECTRICAL</a>
-        <a href="{{ url_for('cafeteria.room') }}">CAFETERIA</a>
-        <a href="{{ url_for('medbay.room') }}">MEDBAY</a>
-        <a href="{{ url_for('reactor.room') }}">REACTOR</a>
-        <a href="{{ url_for('security.room') }}">SECURITY</a>
-        <a href="{{ url_for('admin_terminal.room') }}">ADMIN</a>
-
-        <a href="{{ url_for('scoreboard.scoreboard') }}">SCOREBOARD</a>
+        <a href="{{ url_for('main.home') }}">🚀 IMPOSTOR HUNT</a>
+        <a href="{{ url_for('dashboard.index') }}">📟 DASHBOARD</a>
 
         {% if current_user.is_authenticated %}
+            <a href="{{ url_for('communications.room') }}">📡 COMMS</a>
+            <a href="{{ url_for('electrical.room') }}">⚡ ELECTRICAL</a>
+            <a href="{{ url_for('cafeteria.room') }}">🍕 CAFETERIA</a>
+            <a href="{{ url_for('medbay.room') }}">🏥 MEDBAY</a>
+            <a href="{{ url_for('reactor.room') }}">☢️ REACTOR</a>
+            <a href="{{ url_for('security.room') }}">🔐 SECURITY</a>
+            <a href="{{ url_for('admin_terminal.room') }}">🖥️ ADMIN</a>
+            <a href="{{ url_for('scoreboard.scoreboard') }}">🏆 SCOREBOARD</a>
             <span class="crewmate">Crewmate: {{ current_user.username }}</span>
-            <a href="{{ url_for('auth.logout') }}">Logout</a>
+            <a href="{{ url_for('auth.logout') }}">🔒 Logout</a>
         {% else %}
             <a href="{{ url_for('auth.login') }}">Login</a>
             <a href="{{ url_for('auth.register') }}">Register</a>

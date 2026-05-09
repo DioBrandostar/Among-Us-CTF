@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="text-align:center; margin-top:40px;">
+    <h1 style="font-size:3rem; text-shadow: 0 0 20px rgba(0,255,0,0.5);">HORIZON-7</h1>
+    <p style="font-size:1.2rem; margin:20px 0;">DISTRESS SIGNAL RECEIVED</p>
+    <div class="challenge-box" style="text-align:left; max-width:600px; margin:20px auto;">
+        <p><strong>CRITICAL ALERT:</strong> Sabotage detected across multiple ship systems.</p>
+        <p>Crew suspects an impostor among them.</p>
+        <p>You have been dispatched from Earth to investigate.</p>
+        <p>Repair systems, gather evidence, identify the impostor.</p>
+    </div>
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('dashboard.index') }}" class="btn" style="font-size:1.1rem; padding:12px 30px;">ENTER STATION</a>
+    {% else %}
+        <a href="{{ url_for('auth.register') }}" class="btn" style="font-size:1.1rem; padding:12px 30px;">BEGIN MISSION</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📟 SHIP SYSTEMS STATUS</h2>
+<p>Investigator <strong style="color:#66ff66;">{{ current_user.username }}</strong> — Systems repaired: <strong>{{ progress_count }}/7</strong></p>
+
+<div class="room-grid">
+    {% set rooms = [
+        ('communications', '📡', 'Communications'),
+        ('electrical', '⚡', 'Electrical'),
+        ('cafeteria', '🍕', 'Cafeteria'),
+        ('medbay', '🏥', 'Medbay'),
+        ('reactor', '☢️', 'Reactor'),
+        ('security', '🔐', 'Security'),
+        ('admin_terminal', '🖥️', 'Admin Terminal')
+    ] %}
+    {% for room_id, icon, name in rooms %}
+        <div class="room-card {% if room_id in fixed_rooms %}fixed{% else %}broken{% endif %}">
+            <span class="room-icon">{{ icon }}</span>
+            <div class="room-info">
+                <strong>{{ name }}</strong>
+                <span class="status">
+                    {% if room_id in fixed_rooms %}✅ FIXED{% else %}❌ SABOTAGED{% endif %}
+                </span>
+                {% if room_id not in fixed_rooms %}
+                    <a href="{{ url_for(room_id + '.room') }}" class="btn">REPAIR</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% if all_done %}
+<div class="emergency-section">
+    <h3>🚨 ALL SYSTEMS REPAIRED</h3>
+    <p>Evidence collected. Emergency credentials reconstructed.</p>
+    <p style="color:#ff6666;">The impostor is still among the crew!</p>
+    <a href="{{ url_for('emergency.vote') }}" class="btn btn-emergency">CALL EMERGENCY MEETING</a>
+</div>
+{% endif %}
+
+{% endblock %}

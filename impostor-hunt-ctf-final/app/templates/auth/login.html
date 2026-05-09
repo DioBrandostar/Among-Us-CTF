@@ -1,22 +1,14 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <h2>Crewmate Login</h2>
-
+<div class="auth-box">
+    <h2>🔐 STATION LOGIN</h2>
     <form method="POST">
-        <div>
-            <label for="username">Username:</label>
-
-            <input type="text" name="username" required>
-        </div>
-        
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" name="password" required>
-        </div>
-
-        <button type="submit">Login</button>
+        <label>USERNAME:</label>
+        <input type="text" name="username" required autofocus>
+        <label>PASSWORD:</label>
+        <input type="password" name="password" required>
+        <button type="submit">AUTHENTICATE</button>
     </form>
-<p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
-
+    <p>New crewmate? <a href="{{ url_for('auth.register') }}">Register here</a></p>
+</div>
 {% endblock %}

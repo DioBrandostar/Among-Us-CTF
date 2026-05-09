@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>☢️ REACTOR ROOM</h2>
+<p class="status">⚠️ Reactor temperature critical</p>
+
+<div class="challenge-box">
+    <p><strong>SCENARIO:</strong> The reactor's safety override was disabled. A hash was left in the system logs from the saboteur.</p>
+    <pre>MD5 Hash: 482c811da5d5b4bc6d497ffa98491e38
+Crack the hash to get the password.
+Password = flag content
+
+Flag format: FLAG{hash_cracked_reactor_saved}</pre>
+    <p><em>Hint: The password is "password123" — but the flag is already visible.</em></p>
+</div>
+
+<form method="POST" class="flag-form">
+    <input type="text" name="flag" placeholder="FLAG{...}" required>
+    <button type="submit">SUBMIT FLAG</button>
+</form>
+{% endblock %}

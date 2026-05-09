@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🔐 SECURITY ROOM</h2>
+<p class="status">⚠️ Camera footage deleted</p>
+
+<div class="challenge-box">
+    <p><strong>SCENARIO:</strong> The security cameras were disabled during the sabotage. Metadata from a deleted file was recovered.</p>
+    <pre>Recovered file: deleted_footage.mp4
+Hidden string in metadata: "sus_black_was_here"
+Flag: FLAG{sus_black_was_here}</pre>
+    <p><em>Hint: Look for the hidden string. That's the flag.</em></p>
+</div>
+
+<form method="POST" class="flag-form">
+    <input type="text" name="flag" placeholder="FLAG{...}" required>
+    <button type="submit">SUBMIT FLAG</button>
+</form>
+{% endblock %}

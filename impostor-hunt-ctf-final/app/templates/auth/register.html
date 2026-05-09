@@ -1,8 +1,14 @@
-{% extends "base.html"%}
-{% block content%}
-<form method ="POST">
-<input type = "text" name = "username" required>
-<input type = "password" name = "password" required>
-<input type = 'submit' value = 'Register'>
-</form>
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-box">
+    <h2>NEW INVESTIGATOR</h2>
+    <form method="POST">
+        <label>CHOOSE USERNAME:</label>
+        <input type="text" name="username" required>
+        <label>CHOOSE PASSWORD:</label>
+        <input type="password" name="password" required>
+        <button type="submit">REGISTER</button>
+    </form>
+    <p>Already registered? <a href="{{ url_for('auth.login') }}">Login</a></p>
+</div>
 {% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🏆 INVESTIGATION LEADERBOARD</h2>
+<table class="leaderboard">
+    <thead>
+        <tr>
+            <th>RANK</th>
+            <th>INVESTIGATOR</th>
+            <th>SCORE</th>
+            <th>TIME</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in all_users %}
+        <tr {% if user.id == current_user.id %}class="current-user"{% endif %}>
+            <td>{{ loop.index }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.total_score }}</td>
+            <td>{{ user.get_elapsed_time() or 'In progress...' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
