@@ -14,5 +14,22 @@
     <button type="submit">SUBMIT FLAG</button>
 </form>
 
-<button class="hint-btn" disabled>Request Hint (Coming Soon)</button>
+<div class="hint-section">
+    {% set hints_count = current_user.get_used_hints_count('communications') %}
+    {% if hints_count > 0 %}
+        <div class="hints-display">
+            {% for i in range(1, hints_count + 1) %}
+                <div class="hint-item">
+                    <strong>💡 Hint {{ i }}:</strong> {{ get_hint_text('communications', i) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if hints_count < 2 %}
+        <form action="{{ url_for('main.get_hint', room_name='communications') }}" method="POST" style="display:inline;">
+            <button type="submit" class="hint-btn">Request Hint (-{% if hints_count == 0 %}20{% else %}30{% endif %} points)</button>
+        </form>
+    {% endif %}
+</div>
 {% endblock %}

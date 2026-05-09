@@ -6,6 +6,7 @@
         <tr>
             <th>RANK</th>
             <th>INVESTIGATOR</th>
+            <th>LABS COMPLETED</th>
             <th>SCORE</th>
             <th>TIME</th>
         </tr>
@@ -15,8 +16,9 @@
         <tr {% if user.id == current_user.id %}class="current-user"{% endif %}>
             <td>{{ loop.index }}</td>
             <td>{{ user.username }}</td>
+            <td>{{ user.get_rooms_fixed_count() }} / 7</td>
             <td>{{ user.total_score }}</td>
-            <td>{{ user.get_elapsed_time() or 'In progress...' }}</td>
+            <td>{{ user.get_elapsed_time() or 'Active...' }}</td>
         </tr>
         {% endfor %}
     </tbody>

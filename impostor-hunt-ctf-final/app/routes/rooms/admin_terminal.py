@@ -7,6 +7,8 @@ admin_terminal_bp = Blueprint('admin_terminal', __name__)
 @admin_terminal_bp.route('/admin_terminal', methods=['GET', 'POST'])
 @login_required
 def room():
+    if not current_user.start_time:
+        return redirect(url_for('main.briefing'))
     if current_user.has_fixed_room('admin_terminal'):
         flash('Admin Terminal is already fixed')
         return redirect(url_for('dashboard.index'))

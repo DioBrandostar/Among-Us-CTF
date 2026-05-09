@@ -90,7 +90,9 @@ def validate_flag(user, room_name, submitted_flag):
         )
         db.session.add(fix)
     
-    user.total_score += points
+    # Sync score accounting for hints
+    from app.services.scoring import sync_user_score
+    sync_user_score(user)
     
     if room_name == 'final':
         user.completion_time = datetime.utcnow()

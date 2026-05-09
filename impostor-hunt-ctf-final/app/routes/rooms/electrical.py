@@ -8,6 +8,8 @@ electrical_bp = Blueprint('electrical', __name__)
 @electrical_bp.route('/electrical', methods=['GET', 'POST'])
 @login_required
 def room():
+    if not current_user.start_time:
+        return redirect(url_for('main.briefing'))
     if current_user.has_fixed_room('electrical'):
         flash('Electrical already solved', 'info')
         return redirect(url_for('dashboard.index'))

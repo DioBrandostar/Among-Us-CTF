@@ -51,6 +51,16 @@ def create_app(config_name=None):
     app.register_blueprint(reactor_bp)
     app.register_blueprint(admin_terminal_bp)
 
+    @app.context_processor
+    def inject_clues():
+        from flask_login import current_user
+        from app.services.clue_engine import get_unlocked_clues
+        from app.services.hint_engine import get_hint_text
+        return dict(
+            unlocked_clues=get_unlocked_clues(current_user),
+            get_hint_text=get_hint_text
+        )
+
     with app.app_context():
         db.create_all()
 

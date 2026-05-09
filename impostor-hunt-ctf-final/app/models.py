@@ -69,6 +69,18 @@ class User(UserMixin, db.Model):
             return f"{hours}h {mins}m"
         return f"{mins}m"
 
+    def get_used_hints_count(self, room_name):
+        """Returns how many hints the user used for a specific room."""
+        return HintUsage.query.filter_by(user_id=self.id, room_name=room_name).count()
+
+    def used_hint(self, room_name, hint_number):
+        """Checks if a specific hint was already used."""
+        return HintUsage.query.filter_by(
+            user_id=self.id, 
+            room_name=room_name, 
+            hint_number=hint_number
+        ).first() is not None
+
     def __repr__(self): #like @StringName
         return f'<User {self.username}>'
 

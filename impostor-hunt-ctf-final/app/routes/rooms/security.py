@@ -7,6 +7,8 @@ security_bp = Blueprint('security',__name__)
 @security_bp.route('/security',methods = ['GET','POST'])
 @login_required
 def room():
+    if not current_user.start_time:
+        return redirect(url_for('main.briefing'))
     if current_user.has_fixed_room('security'):
         flash('security is already fixed')
         return redirect(url_for('dashboard.index'))

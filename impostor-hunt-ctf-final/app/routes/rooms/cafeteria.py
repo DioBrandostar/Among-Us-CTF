@@ -4,9 +4,11 @@ from flask_login import login_required,current_user
 
 cafeteria_bp = Blueprint('cafeteria',__name__)
 
-@cafeteria_bp.route('/cafeteria', methods = ['GET','POST'])
+@cafeteria_bp.route('/cafeteria', methods=['GET', 'POST'])
 @login_required
 def room():
+    if not current_user.start_time:
+        return redirect(url_for('main.briefing'))
     if current_user.has_fixed_room('cafeteria'):
         flash('cafeteria already solved')
         return redirect(url_for('dashboard.index'))

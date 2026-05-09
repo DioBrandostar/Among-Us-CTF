@@ -27,7 +27,6 @@ def register():
         try:
             new_user = User(
                 username=username,
-                start_time=datetime.utcnow(),
                 total_score=0
             )
             new_user.set_password(password)
@@ -35,8 +34,8 @@ def register():
             db.session.commit()
             
             login_user(new_user, remember=True)
-            flash(f'Welcome aboard, {username}! Your investigation begins.', 'success')
-            return redirect(url_for('dashboard.index'))
+            flash(f'Welcome aboard, {username}! Read the mission briefing before proceeding.', 'success')
+            return redirect(url_for('main.briefing'))
         except Exception as e:
             db.session.rollback()
             flash('Registration failed. Please try again.', 'danger')
@@ -67,8 +66,11 @@ def login():
 
         try:
             login_user(user, remember=True)
-            flash(f'Welcome back, {username}. The ship needs you.', 'success')
+            flash(f'Welcome back, {username}.', 'success')
             
+            if not user.start_time:
+                return redirect(url_for('main.briefing'))
+
             next_page = request.args.get('next')
             if next_page and next_page.startswith('/'):
                 return redirect(next_page)

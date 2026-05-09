@@ -7,6 +7,8 @@ medbay_bp = Blueprint('medbay',__name__)
 @medbay_bp.route('/medbay',methods = ['GET','POST'])
 @login_required
 def room():
+    if not current_user.start_time:
+        return redirect(url_for('main.briefing'))
     if current_user.has_fixed_room('medbay'):
         flash('medbay is already fixed')
         return redirect(url_for('dashboard.index'))

@@ -15,4 +15,23 @@ Flag: FLAG{idor_body_reported}</pre>
     <input type="text" name="flag" placeholder="FLAG{...}" required>
     <button type="submit">SUBMIT FLAG</button>
 </form>
+
+<div class="hint-section">
+    {% set hints_count = current_user.get_used_hints_count('medbay') %}
+    {% if hints_count > 0 %}
+        <div class="hints-display">
+            {% for i in range(1, hints_count + 1) %}
+                <div class="hint-item">
+                    <strong>💡 Hint {{ i }}:</strong> {{ get_hint_text('medbay', i) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if hints_count < 2 %}
+        <form action="{{ url_for('main.get_hint', room_name='medbay') }}" method="POST" style="display:inline;">
+            <button type="submit" class="hint-btn">Request Hint (-{% if hints_count == 0 %}20{% else %}30{% endif %} points)</button>
+        </form>
+    {% endif %}
+</div>
 {% endblock %}

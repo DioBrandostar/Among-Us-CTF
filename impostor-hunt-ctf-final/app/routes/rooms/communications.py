@@ -7,6 +7,8 @@ communications_bp = Blueprint('communications', __name__)
 @communications_bp.route('/communications', methods=['GET', 'POST'])
 @login_required
 def room():
+    if not current_user.start_time:
+        return redirect(url_for('main.briefing'))
     if current_user.has_fixed_room('communications'):
         flash('Communications already solved', 'info')
         return redirect(url_for('dashboard.index'))
