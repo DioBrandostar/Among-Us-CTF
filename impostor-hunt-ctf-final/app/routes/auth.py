@@ -33,7 +33,7 @@ def register():
 
         login_user(new_user)
         flash('Registration Successful!','success')
-        return redirect(url_for('dashboard.index'))
+        return redirect(url_for('main.briefing'))
 
     return render_template('auth/register.html')
 
@@ -56,7 +56,14 @@ def login():
 
         next_page = request.args.get('next')
         if not next_page:
-            next_page = url_for('dashboard.index')
+            next_page = url_for('main.briefing') # CHANGED THIS LINE
         return redirect(next_page)
 
     return render_template('auth/login.html')
+
+@auth_bp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('main.home'))
