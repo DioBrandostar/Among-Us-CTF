@@ -9,67 +9,70 @@
     </div>
 
     <div class="challenge-box">
-        <p><strong>SCENARIO:</strong> The medbay system stores medical reports for all 8 crew members. You are assigned <strong style="color:var(--amber);">ID #8</strong>. Only your own record should be accessible.</p>
+        <p><strong>SCENARIO:</strong> The medbay system stores medical reports for all crew members. Your file is assigned <strong style="color:var(--amber);">Patient ID #8</strong>. Only your own record should be accessible through the system.</p>
+        <pre style="font-size:0.8rem; margin-top:10px;">CREW MANIFEST: 8 members registered (IDs #1 — #8)
+YOUR ACCESS LEVEL: Patient (Self-Record Only)</pre>
     </div>
 
-    <!-- Crew roster -->
-    <div class="crew-roster">
-        <h3 style="color:var(--teal); margin-bottom:12px;">👥 CREW ROSTER ({{ 7 + 1 }} members)</h3>
-        <table class="menu-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cid, rec in crew_records.items() %}
-                <tr>
-                    <td>#{{ cid }}</td>
-                    <td>{{ rec.name }}</td>
-                    <td>{{ rec.role }}</td>
-                    <td>
-                        <a href="{{ url_for('medbay.room', id=cid) }}" class="btn" style="padding:4px 12px; font-size:0.75rem;">View Report</a>
-                    </td>
-                </tr>
-                {% endfor %}
-                <tr style="background:rgba(245,166,35,0.1);">
-                    <td>#8</td>
-                    <td>{{ user_record.name }} (You)</td>
-                    <td>{{ user_record.role }}</td>
-                    <td>
-                        <a href="{{ url_for('medbay.room', id=8) }}" class="btn" style="padding:4px 12px; font-size:0.75rem;">View Report</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div style="margin-top:15px; text-align:center;">
+        <a href="{{ url_for('medbay.room', id=8) }}" class="btn">📋 View My Medical Report</a>
     </div>
 
-    <!-- Viewed medical report -->
-    {% if viewed_record %}
+    <!-- Medical report display -->
+    {% if view_id == 8 %}
     <div class="medical-report" style="margin-top:20px;">
-        <h3 style="color:var(--teal); margin-bottom:12px;">📋 MEDICAL REPORT — ID #{{ view_id }}</h3>
-        <div class="report-card {% if viewed_record.corrupted and not is_solved %}corrupted{% endif %}">
-            <div class="report-row"><span class="report-label">Name:</span> <span>{{ viewed_record.name }}</span></div>
-            <div class="report-row"><span class="report-label">Role:</span> <span>{{ viewed_record.role }}</span></div>
-            <div class="report-row"><span class="report-label">Blood Type:</span> <span>{{ viewed_record.blood_type }}</span></div>
-            <div class="report-row"><span class="report-label">Heart Rate:</span> <span>{{ viewed_record.heart_rate }}</span></div>
-            <div class="report-row"><span class="report-label">Status:</span> <span style="color:{% if viewed_record.status == 'HEALTHY' %}var(--success){% else %}var(--coral){% endif %}; font-weight:700;">{{ viewed_record.status }}</span></div>
-            <div class="report-row"><span class="report-label">Notes:</span> <span>{{ viewed_record.notes }}</span></div>
-        </div>
-    </div>
-    {% elif view_id == 8 %}
-    <div class="medical-report" style="margin-top:20px;">
-        <h3 style="color:var(--teal); margin-bottom:12px;">📋 MEDICAL REPORT — ID #8 (YOUR FILE)</h3>
+        <h3 style="color:var(--teal); margin-bottom:12px;">📋 MEDICAL REPORT — PATIENT #8 (YOUR FILE)</h3>
         <div class="report-card">
+            <div class="report-row"><span class="report-label">Patient ID:</span> <span>#8</span></div>
             <div class="report-row"><span class="report-label">Name:</span> <span>{{ user_record.name }}</span></div>
             <div class="report-row"><span class="report-label">Role:</span> <span>{{ user_record.role }}</span></div>
             <div class="report-row"><span class="report-label">Blood Type:</span> <span>{{ user_record.blood_type }}</span></div>
             <div class="report-row"><span class="report-label">Heart Rate:</span> <span>{{ user_record.heart_rate }}</span></div>
-            <div class="report-row"><span class="report-label">Status:</span> <span style="color:var(--success); font-weight:700;">{{ user_record.status }}</span></div>
+            <div class="report-row"><span class="report-label">Blood Pressure:</span> <span>{{ user_record.blood_pressure }}</span></div>
+            <div class="report-row"><span class="report-label">O₂ Saturation:</span> <span>{{ user_record.oxygen_sat }}</span></div>
+            <div class="report-row"><span class="report-label">Body Temp:</span> <span>{{ user_record.body_temp }}</span></div>
+            <div class="report-row"><span class="report-label">WBC Count:</span> <span>{{ user_record.white_blood_cells }}</span></div>
             <div class="report-row"><span class="report-label">Notes:</span> <span>{{ user_record.notes }}</span></div>
+        </div>
+    </div>
+
+    {% elif viewed_record %}
+    <div class="medical-report" style="margin-top:20px;">
+        <h3 style="color:var(--teal); margin-bottom:12px;">📋 MEDICAL REPORT — PATIENT #{{ view_id }}</h3>
+        {% if viewed_record.has_error and not is_solved %}
+        <div class="report-error-banner">
+            ⚠️ SYSTEM WARNING: Data integrity check FAILED. One or more fields contain values outside expected parameters.
+        </div>
+        {% endif %}
+        <div class="report-card {% if viewed_record.has_error and not is_solved %}corrupted{% endif %}">
+            <div class="report-row"><span class="report-label">Patient ID:</span> <span>#{{ view_id }}</span></div>
+            <div class="report-row"><span class="report-label">Name:</span> <span>{{ viewed_record.name }}</span></div>
+            <div class="report-row"><span class="report-label">Role:</span> <span>{{ viewed_record.role }}</span></div>
+            <div class="report-row {% if 'blood_type' in viewed_record.error_fields and not is_solved %}field-error{% endif %}">
+                <span class="report-label">Blood Type:</span>
+                <span>{{ viewed_record.blood_type }}{% if 'blood_type' in viewed_record.error_fields and not is_solved %} <span class="field-err-tag">UNRECOGNIZED</span>{% endif %}</span>
+            </div>
+            <div class="report-row {% if 'heart_rate' in viewed_record.error_fields and not is_solved %}field-error{% endif %}">
+                <span class="report-label">Heart Rate:</span>
+                <span>{{ viewed_record.heart_rate }}{% if 'heart_rate' in viewed_record.error_fields and not is_solved %} <span class="field-err-tag">OUT OF RANGE</span>{% endif %}</span>
+            </div>
+            <div class="report-row {% if 'blood_pressure' in viewed_record.error_fields and not is_solved %}field-error{% endif %}">
+                <span class="report-label">Blood Pressure:</span>
+                <span>{{ viewed_record.blood_pressure }}{% if 'blood_pressure' in viewed_record.error_fields and not is_solved %} <span class="field-err-tag">CRITICAL</span>{% endif %}</span>
+            </div>
+            <div class="report-row {% if 'oxygen_sat' in viewed_record.error_fields and not is_solved %}field-error{% endif %}">
+                <span class="report-label">O₂ Saturation:</span>
+                <span>{{ viewed_record.oxygen_sat }}{% if 'oxygen_sat' in viewed_record.error_fields and not is_solved %} <span class="field-err-tag">IMPOSSIBLE</span>{% endif %}</span>
+            </div>
+            <div class="report-row {% if 'body_temp' in viewed_record.error_fields and not is_solved %}field-error{% endif %}">
+                <span class="report-label">Body Temp:</span>
+                <span>{{ viewed_record.body_temp }}{% if 'body_temp' in viewed_record.error_fields and not is_solved %} <span class="field-err-tag">LETHAL</span>{% endif %}</span>
+            </div>
+            <div class="report-row {% if 'white_blood_cells' in viewed_record.error_fields and not is_solved %}field-error{% endif %}">
+                <span class="report-label">WBC Count:</span>
+                <span>{{ viewed_record.white_blood_cells }}{% if 'white_blood_cells' in viewed_record.error_fields and not is_solved %} <span class="field-err-tag">ABNORMAL</span>{% endif %}</span>
+            </div>
+            <div class="report-row"><span class="report-label">Notes:</span> <span>{{ viewed_record.notes }}</span></div>
         </div>
     </div>
     {% endif %}

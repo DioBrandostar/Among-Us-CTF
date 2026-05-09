@@ -5,10 +5,10 @@
 
 <div class="comms-container">
     <div class="radio-waves">
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <span class="glitch-text">{% if is_solved %}📡 SIGNAL LOCK{% else %}📡 SIGNAL UNSTABLE{% endif %}</span>
+        <div class="wave {% if is_solved %}wave-stable{% endif %}"></div>
+        <div class="wave {% if is_solved %}wave-stable{% endif %}"></div>
+        <div class="wave {% if is_solved %}wave-stable{% endif %}"></div>
+        <span class="{% if is_solved %}signal-stable{% else %}glitch-text{% endif %}">{% if is_solved %}📡 SIGNAL LOCK{% else %}📡 SIGNAL UNSTABLE{% endif %}</span>
     </div>
 
     <div class="challenge-box">
