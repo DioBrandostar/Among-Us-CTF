@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🚨 EMERGENCY MEETING</h2>
+<p style="color:#ff6666; font-size:1.1rem;">All crew members are gathered. Who is the impostor?</p>
+
+<div class="challenge-box">
+    <p><strong>EVIDENCE COLLECTED:</strong></p>
+    <ul style="color:#ffaaaa; margin-left:20px;">
+        <li>Security footage deleted — requires admin access</li>
+        <li>Communication logs modified — security clearance needed</li>
+        <li>Navigation route altered — security override used</li>
+        <li>Reactor tampered with — access logs erased</li>
+        <li>Medical records accessed — security credentials used</li>
+    </ul>
+    <p style="margin-top:10px;">⚠️ Only someone with <strong>security privileges</strong> could do all of this.</p>
+</div>
+
+<form method="POST">
+    <div class="suspect-grid">
+        {% for suspect in crew %}
+        <button type="submit" name="suspect" value="{{ suspect.name }}" class="suspect-card">
+            <div class="suspect-name">{{ suspect.name }}</div>
+            <div class="suspect-role">{{ suspect.role }}</div>
+            <small style="color:#888;">{{ suspect.clue }}</small>
+        </button>
+        {% endfor %}
+    </div>
+</form>
+{% endblock %}

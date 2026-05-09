@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>⚠️ EJECTION PROTOCOL ENGAGED</h2>
+<div class="challenge-box">
+    <p><strong>MARWAN:</strong> "You think you've won? I've locked the ejection system. The ship will self-destruct unless you can override my final security!"</p>
+    <p style="color:#ff6666;">A final puzzle appears on the admin terminal...</p>
+</div>
+<a href="{{ url_for('emergency.final_room') }}" class="btn btn-emergency">ATTEMPT OVERRIDE</a>
+{% endblock %}

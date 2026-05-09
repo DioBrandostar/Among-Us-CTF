@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="victory-box">
+    <h1>🎉 IMPOSTOR EJECTED!</h1>
+    <p style="font-size:1.3rem; margin:20px 0;">Marwan has been ejected into space. The ship is safe.</p>
+    <div class="final-flag">FLAG{impostor_ejected_gg_wp_crewmate}</div>
+    <p style="margin:15px 0;">Final Score: <strong style="color:#66ff66;">{{ current_user.total_score }}</strong></p>
+    <p>Time: <strong style="color:#66ff66;">{{ current_user.get_elapsed_time() }}</strong></p>
+    <a href="{{ url_for('scoreboard.scoreboard') }}" class="btn">VIEW LEADERBOARD</a>
+    <a href="{{ url_for('dashboard.index') }}" class="btn">BACK TO STATION</a>
+</div>
+{% endblock %}

@@ -1,28 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>📟 SHIP SYSTEMS STATUS</h2>
-<p>Investigator <strong style="color:#66ff66;">{{ current_user.username }}</strong> — Systems repaired: <strong>{{ progress_count }}/7</strong></p>
+<div style="text-align:center; margin-bottom:24px;">
+    <h2>📟 SHIP SYSTEMS — STATUS REPORT</h2>
+    <p style="color:var(--warm-gray);">Investigator <strong style="color:var(--amber);">{{ current_user.username }}</strong> • Systems restored: <strong style="color:var(--success);">{{ progress_count }}</strong>/7</p>
+</div>
 
 <div class="room-grid">
     {% set rooms = [
-        ('communications', '📡', 'Communications'),
-        ('electrical', '⚡', 'Electrical'),
-        ('cafeteria', '🍕', 'Cafeteria'),
-        ('medbay', '🏥', 'Medbay'),
-        ('reactor', '☢️', 'Reactor'),
-        ('security', '🔐', 'Security'),
-        ('admin_terminal', '🖥️', 'Admin Terminal')
+        ('communications', '📡', 'Communications', 'Restore ship-wide messaging'),
+        ('electrical', '⚡', 'Electrical', 'Stabilize power grid'),
+        ('cafeteria', '🍕', 'Cafeteria', 'Secure food storage'),
+        ('medbay', '🏥', 'Medbay', 'Protect medical records'),
+        ('reactor', '☢️', 'Reactor', 'Cool reactor core'),
+        ('security', '🔐', 'Security', 'Restore surveillance'),
+        ('admin_terminal', '🖥️', 'Admin Terminal', 'Regain system control')
     ] %}
-    {% for room_id, icon, name in rooms %}
+    {% for room_id, icon, name, desc in rooms %}
         <div class="room-card {% if room_id in fixed_rooms %}fixed{% else %}broken{% endif %}">
             <span class="room-icon">{{ icon }}</span>
             <div class="room-info">
                 <strong>{{ name }}</strong>
+                <small style="color:var(--text-muted); display:block; margin-bottom:4px;">{{ desc }}</small>
                 <span class="status">
-                    {% if room_id in fixed_rooms %}✅ FIXED{% else %}❌ SABOTAGED{% endif %}
+                    {% if room_id in fixed_rooms %}✅ Operational{% else %}⚠️ Needs repair{% endif %}
                 </span>
                 {% if room_id not in fixed_rooms %}
-                    <a href="{{ url_for(room_id + '.room') }}" class="btn">REPAIR</a>
+                    <a href="{{ url_for(room_id + '.room') }}" class="btn">Begin Repair</a>
                 {% endif %}
             </div>
         </div>
@@ -31,10 +34,10 @@
 
 {% if all_done %}
 <div class="emergency-section">
-    <h3>🚨 ALL SYSTEMS REPAIRED</h3>
-    <p>Evidence collected. Emergency credentials reconstructed.</p>
-    <p style="color:#ff6666;">The impostor is still among the crew!</p>
-    <a href="{{ url_for('emergency.vote') }}" class="btn btn-emergency">CALL EMERGENCY MEETING</a>
+    <h3>⚠️ All Systems Restored — But Danger Remains</h3>
+    <p>The evidence is overwhelming. Someone on this ship sabotaged every system.</p>
+    <p style="color:var(--coral); font-weight:600;">It's time to confront the crew.</p>
+    <a href="{{ url_for('emergency.vote') }}" class="btn btn-emergency">🚨 Call Emergency Meeting</a>
 </div>
 {% endif %}
 

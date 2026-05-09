@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🔒 AIRLOCK OVERRIDE — ROOM #8</h2>
+<div class="challenge-box">
+    <p><strong>FINAL CHALLENGE:</strong> Marwan locked the ejection with an encrypted code. All previous clues combine to form the master override.</p>
+    <pre>
+CLUES FROM INVESTIGATION:
+- FLAG{lights_out_in_electrical}
+- FLAG{space_food_is_sus}
+- FLAG{idor_body_reported}
+- FLAG{sus_black_was_here}
+- FLAG{cookies_are_not_safe_in_space}
+- FLAG{hash_cracked_reactor_saved}
+- FLAG{xss_script_injected_in_space}
+
+FINAL OVERRIDE CODE:
+Combine all flag contents (inside {...}) into a sentence that describes the situation.
+Submit as: FLAG{impostor_ejected_gg_wp_crewmate}
+    </pre>
+    <p><em>Hint: The final flag thanks you for ejecting the impostor. Good game, well played.</em></p>
+</div>
+
+<form method="POST" class="flag-form">
+    <input type="text" name="flag" placeholder="FLAG{...}" required>
+    <button type="submit">ACTIVATE EJECTION</button>
+</form>
+{% endblock %}
