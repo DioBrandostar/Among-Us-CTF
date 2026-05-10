@@ -1,11 +1,12 @@
 from app.models import RoomFix
 
+# 6 clues total — admin_terminal no longer gives a clue
+# (it gives persistent SQL access for credential recovery instead)
 CLUES = {
     'medbay': "🏥 The scan records were altered. Someone was trying to hide their physical symptoms.",
-    'admin_terminal': "🖥️ A high-level session was hijacked. The impostor has access to administrative controls.",
     'communications': "📡 Internal logs show a user impersonating an officer to gain trust.",
-    'reactor': "☢️ The core stability was compromised using a default password. Someone was lazy or arrogant.",
-    'security': "🔐 Surveillance logs show a shadowed figure moving through vents in the late hours.",
+    'reactor': "☢️ The diagnostic terminal was left wide open. Someone ran unauthorized commands on the core systems.",
+    'security': "🔐 Surveillance footage was tampered with — hidden data was embedded in the camera snapshots.",
     'electrical': "⚡ The power grid was bypassed using a custom script. The impostor knows the station's architecture.",
     'cafeteria': "🍕 An encoded message was found under a table. It points to a rendezvous point near the reactor."
 }

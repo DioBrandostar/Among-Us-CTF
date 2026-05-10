@@ -8,7 +8,7 @@
 
     <div class="story-content">
         <section class="story-section">
-            <p class="dropcap">In the year 2147, the deep-space industrial ship Orion-9 was returning to Earth after a mining operation near Jupiter’s outer colonies. The ship carried engineers, security officers, technicians, scientists, and navigation crew. What was supposed to be a routine return trip became a silent disaster.</p>
+            <p class="dropcap">In the year 2147, the deep-space industrial ship Orion-9 was returning to Earth after a mining operation near Jupiter's outer colonies. The ship carried engineers, security officers, technicians, scientists, and navigation crew. What was supposed to be a routine return trip became a silent disaster.</p>
             <p>A few days before reaching Earth, communication with the ship suddenly stopped. No distress signal. No emergency meeting. No escape pods launched. Only silence.</p>
         </section>
 
@@ -30,14 +30,18 @@
 
         <section class="story-section mission-goal">
             <h3>YOUR MISSION</h3>
-            <p>Recover the stolen administrator credentials and reactivate the Emergency System before the ship reaches Earth’s orbit. The impostor may still be alive somewhere aboard the vessel.</p>
+            <p>Recover the stolen administrator credentials and reactivate the Emergency System before the ship reaches Earth's orbit. The impostor may still be alive somewhere aboard the vessel.</p>
         </section>
     </div>
 
     <div class="briefing-actions">
-        <form action="{{ url_for('main.start_mission') }}" method="POST">
-            <button type="submit" class="btn btn-emergency">BEGIN INVESTIGATION</button>
-        </form>
+        {% if read_only is defined and read_only %}
+            <a href="{{ url_for('dashboard.index') }}" class="btn" style="font-size:1.2rem; padding:16px 40px;">↩ RETURN TO DASHBOARD</a>
+        {% else %}
+            <form action="{{ url_for('main.start_mission') }}" method="POST">
+                <button type="submit" class="btn btn-emergency">BEGIN INVESTIGATION</button>
+            </form>
+        {% endif %}
     </div>
 </div>
 

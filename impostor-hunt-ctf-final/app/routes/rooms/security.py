@@ -1,5 +1,6 @@
+import os
 from app.services import flag_validator
-from flask import request, redirect, render_template, url_for, Blueprint, flash
+from flask import request, redirect, render_template, url_for, Blueprint, flash, send_from_directory
 from flask_login import login_required, current_user
 
 security_bp = Blueprint('security', __name__)
@@ -23,3 +24,11 @@ def room():
             return redirect(url_for('security.room'))
 
     return render_template('rooms/security/room.html', is_solved=is_solved)
+
+
+@security_bp.route('/security/download-footage')
+@login_required
+def download_footage():
+    """Serve the surveillance photo with embedded EXIF metadata."""
+    images_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'static', 'images')
+    return send_from_directory(images_dir, 'surveillance_corrupted.jpg', as_attachment=True)

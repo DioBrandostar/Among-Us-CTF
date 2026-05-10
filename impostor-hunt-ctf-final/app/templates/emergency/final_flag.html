@@ -1,27 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>🔒 AIRLOCK OVERRIDE — ROOM #8</h2>
+<h2>🔒 AIRLOCK OVERRIDE — FINAL AUTHORIZATION</h2>
 <div class="challenge-box">
-    <p><strong>FINAL CHALLENGE:</strong> Marwan locked the ejection with an encrypted code. All previous clues combine to form the master override.</p>
-    <pre>
-CLUES FROM INVESTIGATION:
-- FLAG{lights_out_in_electrical}
-- FLAG{space_food_is_sus}
-- FLAG{idor_body_reported}
-- FLAG{sus_black_was_here}
-- FLAG{cookies_are_not_safe_in_space}
-- FLAG{hash_cracked_reactor_saved}
-- FLAG{xss_script_injected_in_space}
-
-FINAL OVERRIDE CODE:
-Combine all flag contents (inside {...}) into a sentence that describes the situation.
-Submit as: FLAG{impostor_ejected_gg_wp_crewmate}
-    </pre>
-    <p><em>Hint: The final flag thanks you for ejecting the impostor. Good game, well played.</em></p>
+    <p><strong>FINAL CHALLENGE:</strong> Marwan locked the ejection system with the admin credentials he changed. You need the <strong>new admin username and password</strong> to override the airlock.</p>
+    <div style="margin-top:15px; padding:15px; background:rgba(0,0,0,0.3); border-radius:var(--radius-sm); border-left:3px solid var(--amber);">
+        <p style="font-size:0.9rem; color:var(--warm-gray); margin:0;">
+            <strong style="color:var(--amber);">💡 REMEMBER:</strong> The Admin Terminal's database is still active even after you secured it. 
+            The impostor stored his new credentials in a hidden database table. Go back and use SQL injection to find them!
+        </p>
+    </div>
 </div>
 
-<form method="POST" class="flag-form">
-    <input type="text" name="flag" placeholder="FLAG{...}" required>
-    <button type="submit">ACTIVATE EJECTION</button>
+<form method="POST" class="flag-form" style="flex-direction:column; align-items:stretch; max-width:500px;">
+    <div style="display:flex; flex-direction:column; gap:12px;">
+        <label style="color:var(--teal); font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:1px;">Admin Username</label>
+        <input type="text" name="username" placeholder="Enter admin username..." required 
+               style="background:rgba(0,0,0,0.5); border:2px solid var(--border); color:var(--text-bright); padding:12px 18px; font-family:'JetBrains Mono',monospace; font-size:0.95rem; border-radius:8px;">
+        
+        <label style="color:var(--teal); font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-top:8px;">Admin Password</label>
+        <input type="text" name="password" placeholder="Enter admin password..." required
+               style="background:rgba(0,0,0,0.5); border:2px solid var(--border); color:var(--text-bright); padding:12px 18px; font-family:'JetBrains Mono',monospace; font-size:0.95rem; border-radius:8px;">
+    </div>
+    <button type="submit" style="margin-top:20px; background:linear-gradient(135deg,#8B1A1A,#FF4444); color:white; border:none; padding:14px 28px; font-family:inherit; font-size:1rem; font-weight:700; cursor:pointer; border-radius:25px; letter-spacing:1px;">🚀 ACTIVATE EJECTION</button>
 </form>
 {% endblock %}

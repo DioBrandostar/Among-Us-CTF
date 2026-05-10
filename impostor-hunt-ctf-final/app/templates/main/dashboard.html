@@ -2,7 +2,7 @@
 {% block content %}
 <div style="text-align:center; margin-bottom:24px;">
     <h2>📟 SHIP SYSTEMS — STATUS REPORT</h2>
-    <p style="color:var(--warm-gray);">Investigator <strong style="color:var(--amber);">{{ current_user.username }}</strong> • Systems restored: <strong style="color:var(--success);">{{ progress_count }}</strong>/7</p>
+    <p style="color:var(--warm-gray);">Investigator <strong style="color:var(--amber);">{{ current_user.username }}</strong> • Systems restored: <strong style="color:var(--success);">{{ progress_count }}</strong>/7 • Clues: <strong style="color:var(--teal);">{{ unlocked_clues|length }}</strong>/6</p>
 </div>
 
 <div class="room-grid">

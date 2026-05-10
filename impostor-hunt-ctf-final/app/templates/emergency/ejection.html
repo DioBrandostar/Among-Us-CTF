@@ -2,8 +2,9 @@
 {% block content %}
 <h2>⚠️ EJECTION PROTOCOL ENGAGED</h2>
 <div class="challenge-box">
-    <p><strong>MARWAN:</strong> "You think you've won? I've locked the ejection system. The ship will self-destruct unless you can override my final security!"</p>
-    <p style="color:#ff6666;">A final puzzle appears on the admin terminal...</p>
+    <p><strong>MARWAN:</strong> "You think you've won? I've changed the admin credentials. The ejection system requires administrator authorization. You'll never find the new login!"</p>
+    <p style="color:#ff6666; margin-top:10px;">The airlock override panel requires the <strong>admin username</strong> and <strong>password</strong> that Marwan set...</p>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px;">💡 <em>Think back — the Admin Terminal database is still accessible. There may be a hidden table with the credentials.</em></p>
 </div>
 <a href="{{ url_for('emergency.final_room') }}" class="btn btn-emergency">ATTEMPT OVERRIDE</a>
 {% endblock %}

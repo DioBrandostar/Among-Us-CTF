@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="briefing-container">
+    <div class="briefing-header">
+        <h1>👥 CREW MANUAL</h1>
+        <p class="subtitle">Orion-9 — Crew Assignments & Roles</p>
+    </div>
+
+    <div class="story-content">
+        <section class="story-section" style="text-align:center;">
+            <p style="color:var(--text-muted); font-size:1.1rem;">
+                📋 This manual contains the current crew roster and their assigned roles aboard the Orion-9.
+            </p>
+        </section>
+
+        <div style="margin-top:30px;">
+            <!-- Crew roster — to be filled later -->
+            <div class="crew-manual-grid">
+                <div class="crew-manual-card">
+                    <div class="crew-manual-icon">🔐</div>
+                    <div class="crew-manual-info">
+                        <strong>Marwan</strong>
+                        <span class="crew-manual-role">Security Officer</span>
+                        <p class="crew-manual-assignment">— Assignment pending —</p>
+                    </div>
+                </div>
+
+                <div class="crew-manual-card">
+                    <div class="crew-manual-icon">🔧</div>
+                    <div class="crew-manual-info">
+                        <strong>Kareem</strong>
+                        <span class="crew-manual-role">Engineer</span>
+                        <p class="crew-manual-assignment">— Assignment pending —</p>
+                    </div>
+                </div>
+
+                <div class="crew-manual-card">
+                    <div class="crew-manual-icon">🧭</div>
+                    <div class="crew-manual-info">
+                        <strong>Yaseen</strong>
+                        <span class="crew-manual-role">Navigation Specialist</span>
+                        <p class="crew-manual-assignment">— Assignment pending —</p>
+                    </div>
+                </div>
+
+                <div class="crew-manual-card">
+                    <div class="crew-manual-icon">📡</div>
+                    <div class="crew-manual-info">
+                        <strong>Saleem</strong>
+                        <span class="crew-manual-role">Comms Technician</span>
+                        <p class="crew-manual-assignment">— Assignment pending —</p>
+                    </div>
+                </div>
+
+                <div class="crew-manual-card">
+                    <div class="crew-manual-icon">🏥</div>
+                    <div class="crew-manual-info">
+                        <strong>Adam</strong>
+                        <span class="crew-manual-role">Medical Officer</span>
+                        <p class="crew-manual-assignment">— Assignment pending —</p>
+                    </div>
+                </div>
+
+                <div class="crew-manual-card">
+                    <div class="crew-manual-icon">🚀</div>
+                    <div class="crew-manual-info">
+                        <strong>Yousef</strong>
+                        <span class="crew-manual-role">Ship Captain</span>
+                        <p class="crew-manual-assignment">— Assignment pending —</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="briefing-actions">
+        <a href="{{ url_for('dashboard.index') }}" class="btn" style="font-size:1rem; padding:14px 32px;">↩ RETURN TO DASHBOARD</a>
+    </div>
+</div>
+
+<style>
+.crew-manual-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.crew-manual-card {
+    background: rgba(27, 31, 59, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s;
+}
+
+.crew-manual-card:hover {
+    border-color: var(--border-bright);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.crew-manual-icon {
+    font-size: 2.2rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.crew-manual-info {
+    flex: 1;
+}
+
+.crew-manual-info strong {
+    display: block;
+    color: var(--text-bright);
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+}
+
+.crew-manual-role {
+    display: block;
+    color: var(--teal);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.crew-manual-assignment {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-style: italic;
+    margin: 0;
+}
+</style>
+{% endblock %}

@@ -5,27 +5,99 @@
 
 <div class="admin-container">
     <div class="terminal-header">
-        <span>SSH: root@horizon-7-admin</span>
+        <span>SSH: root@horizon-7-admin — Crew Database</span>
         <span>X</span>
     </div>
     <div class="terminal-body">
-        <span class="typing-text">>>> searching for "impostor"...</span>
-        <div class="log-scroll">
-            - Attempt 1: "ship logs" -> 0 results <br>
-            - Attempt 2: "impostor" -> <span style="color:var(--coral);">ACCESS DENIED</span> <br>
-            - [SYSTEM] UNAUTHORIZED BYPASS DETECTED <br>
-            - [SYSTEM] INITIATING TRACE... <br>
-            - [SYSTEM] TRACE FAILED: ENCRYPTION TOO STRONG
+        {% if is_solved %}
+        <p style="color:var(--success); margin-bottom:10px; font-size:0.8rem;">
+            root@horizon-7-admin:~$ <span style="color:var(--success);">System secured. Database terminal still active.</span>
+        </p>
+        <div style="padding:10px; background:rgba(78,203,113,0.08); border:1px solid rgba(78,203,113,0.3); border-radius:4px; margin-bottom:15px;">
+            <p style="color:var(--success); font-size:0.85rem; margin:0;">
+                ⚠️ <strong>INTEL:</strong> The impostor changed the admin credentials before being discovered. The old credentials no longer work. Use this terminal to find the <strong>new admin credentials</strong> hidden in the database — you'll need them for the final override.
+            </p>
         </div>
+        {% else %}
+        <p style="color:var(--teal); margin-bottom:15px; font-size:0.8rem;">
+            root@horizon-7-admin:~$ <span class="typing-text">Crew database query terminal active...</span>
+        </p>
+        {% endif %}
+
+        <!-- Search Form — always active (even after fix) -->
+        <form method="POST" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:15px;">
+            <input type="hidden" name="action" value="search">
+            <span style="color:var(--amber); font-family:'JetBrains Mono',monospace; font-size:0.85rem;">SQL&gt;</span>
+            <input type="text" name="query" placeholder="Search crew logs by name..." 
+                   value="{{ search_query }}"
+                   style="flex:1; min-width:250px; background:rgba(0,0,0,0.6); border:1px solid var(--border); color:var(--teal); padding:10px 14px; font-family:'JetBrains Mono',monospace; font-size:0.85rem; border-radius:4px;" autocomplete="off">
+            <button type="submit" style="background:linear-gradient(135deg,#3A9B9B,#2A6B6B); color:white; border:none; padding:10px 20px; border-radius:4px; font-family:inherit; font-weight:600; cursor:pointer; font-size:0.85rem;">EXECUTE QUERY</button>
+        </form>
+
+        <!-- Query Results -->
+        {% if search_results is not none %}
+        <div style="margin-top:10px; padding:12px; background:rgba(0,0,0,0.5); border:1px solid var(--border); border-radius:4px; max-height:300px; overflow-y:auto;">
+            {% if search_results|length > 0 %}
+            <table style="width:100%; border-collapse:collapse; font-family:'JetBrains Mono',monospace; font-size:0.8rem;">
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                        <th style="text-align:left; padding:6px 10px; color:var(--teal); border-bottom:1px solid var(--border); font-size:0.75rem; text-transform:uppercase;">{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in search_results %}
+                    <tr>
+                        {% for col in columns %}
+                        <td style="padding:6px 10px; color:var(--text); border-bottom:1px solid rgba(255,255,255,0.03);">{{ row[col] }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p style="color:var(--text-muted); font-size:0.75rem; margin-top:8px;">{{ search_results|length }} row(s) returned.</p>
+            {% else %}
+            <p style="color:var(--text-muted); font-size:0.85rem;">0 rows returned. No matching records found.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if search_error %}
+        <div style="margin-top:10px; padding:10px; background:rgba(255,107,107,0.1); border:1px solid var(--coral); border-radius:4px;">
+            <span style="color:var(--coral); font-size:0.8rem; font-family:'JetBrains Mono',monospace;">SQL Error: {{ search_error }}</span>
+        </div>
+        {% endif %}
+
+        {% if not search_results and not search_error %}
+        <div class="log-scroll" style="margin-top:10px;">
+            <span style="color:var(--text-muted); font-size:0.75rem;">
+                - [SYSTEM] Database tables loaded <br>
+                - [SYSTEM] Query interface ready <br>
+                - [SYSTEM] Search crew_logs by name <br>
+                {% if not is_solved %}
+                - [WARNING] Input validation: <span style="color:var(--coral);">DISABLED</span> <br>
+                - [SYSTEM] Awaiting query...
+                {% else %}
+                - [SYSTEM] Room secured — terminal remains active for admin credential recovery <br>
+                - [WARNING] Impostor may have stored credentials in hidden database tables
+                {% endif %}
+            </span>
+        </div>
+        {% endif %}
     </div>
 
+    {% if not is_solved %}
     <div class="challenge-box" style="margin-top:20px; background:rgba(255,255,255,0.05);">
-        <p><strong>SCENARIO:</strong> Someone logged into the admin panel without proper credentials. A script was injected into the system.</p>
+        <p><strong>SCENARIO:</strong> The admin terminal's crew database was compromised. The search function connects directly to the database without proper input filtering. There may be hidden tables containing critical information.</p>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-top:8px;">💡 The query runs: <code style="color:var(--teal);">SELECT id, name, role, last_seen FROM crew_logs WHERE name LIKE '%<em>your input</em>%'</code></p>
     </div>
+    {% endif %}
 </div>
 
 {% if not is_solved %}
 <form method="POST" class="flag-form">
+    <input type="hidden" name="action" value="submit_flag">
     <input type="text" name="flag" placeholder="FLAG{...}" required>
     <button type="submit">SUBMIT FLAG</button>
 </form>
@@ -50,7 +122,7 @@
 {% else %}
 <div class="solved-banner">
     <h3>✅ TERMINAL SECURED</h3>
-    <p>Unauthorized scripts have been purged from the system.</p>
+    <p>Unauthorized access vectors patched. The database terminal remains active for credential recovery.</p>
     <a href="{{ url_for('dashboard.index') }}" class="btn">Back to Dashboard</a>
 </div>
 {% endif %}

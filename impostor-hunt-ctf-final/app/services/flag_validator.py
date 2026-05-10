@@ -6,10 +6,10 @@ ROOM_FLAGS = {
     'electrical':     'FLAG{voltage_spike_77}',
     'cafeteria':      'FLAG{space_food_is_sus}',
     'medbay':         'FLAG{idor_body_reported}',
-    'security':       'FLAG{sus_black_was_here}',
+    'security':       'FLAG{surveil_cam_breach}',
     'communications': 'FLAG{cookies_are_not_safe_in_space}',
-    'reactor':        'FLAG{hash_cracked_reactor_saved}',
-    'admin_terminal': 'FLAG{xss_script_injected_in_space}',
+    'reactor':        'FLAG{command_injection_reactor_meltdown}',
+    'admin_terminal': 'FLAG{sql_injection_admin_pwned}',
     'final':          'FLAG{impostor_ejected_gg_wp_crewmate}',
 }
 

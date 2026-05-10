@@ -19,6 +19,8 @@
             {% if current_user.is_authenticated %}
                 <div class="nav-left">
                     <a href="{{ url_for('dashboard.index') }}">📟 Brief</a>
+                    <a href="{{ url_for('main.introduction') }}">📖 Introduction</a>
+                    <a href="{{ url_for('main.crew_manual') }}">👥 Crew Manual</a>
                     
                     <div class="dropdown">
                         <a href="javascript:void(0)" class="dropbtn">🔍 Clues ({{ unlocked_clues|length }})</a>

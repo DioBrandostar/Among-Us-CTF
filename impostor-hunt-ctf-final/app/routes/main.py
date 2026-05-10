@@ -20,6 +20,18 @@ def briefing():
         return redirect(url_for('dashboard.index'))
     return render_template('main/briefing.html')
 
+@main_bp.route('/introduction')
+@login_required
+def introduction():
+    """Read-only view of the story/briefing — accessible anytime after mission start."""
+    return render_template('main/briefing.html', read_only=True)
+
+@main_bp.route('/crew-manual')
+@login_required
+def crew_manual():
+    """Crew manual page — shows crew assignments (placeholder for now)."""
+    return render_template('main/crew_manual.html')
+
 @main_bp.route('/start-mission', methods=['POST'])
 @login_required
 def start_mission():

@@ -12,20 +12,23 @@ HINTS = {
         "Try changing ?id=8 to other numbers (1-7). Some crew reports have ABNORMAL status with corrupted data containing flag parts."
     ],
     'security': [
-        "The logs show a lot of noise. Focus on entries that mention 'vent' or 'unauthorized'.",
-        "There is a specific log entry that contains a quoted string about 'black' being suspicious. That quoted string is your flag!"
+        "The recovered surveillance photo may contain more than meets the eye. Have you checked the file's metadata?",
+        "Download the photo and inspect its EXIF metadata (use exiftool or an online EXIF viewer). The hidden text is encoded with a Caesar cipher — try different shift values."
     ],
     'communications': [
         "The radio is receiving a stream of MD5 hashes. One of them is a very common password.",
         "Try cracking the hashes using an online MD5 lookup. Enter the decoded word in the restore field."
     ],
     'reactor': [
-        "The password hash is MD5. It's a very common hash that can be easily cracked.",
-        "Search for this hash `482c811da5d5b4bc6d497ffa98491e38` on a site like CrackStation. It will give you a very common word as the answer."
+        "The diagnostic terminal runs system commands. What if the input isn't just an IP address?",
+        "Try appending a second command after the address using & or ; — for example: 127.0.0.1 & type flag.txt (Windows) or 127.0.0.1 ; cat flag.txt (Linux)."
     ],
     'admin_terminal': [
-        "The search bar doesn't sanitize input. Try injecting a script tag like `<script>alert(1)</script>`.",
-        "Try putting `<script>alert(document.cookie)</script>` into the search box. The alert that pops up will show you the session data flag."
+        "The crew search doesn't sanitize input. What if you used SQL syntax in the search field?",
+        "Try a UNION-based SQL injection: ' UNION SELECT 1,2,3 FROM secrets -- to discover hidden tables and their contents."
+    ],
+    'emergency': [
+        "All sabotaged systems required high-level access — cameras, reactor, admin panel, communications. Only one role has clearance for ALL of these systems."
     ]
 }
 

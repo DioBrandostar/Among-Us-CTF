@@ -8,12 +8,30 @@
     <ul style="color:#ffaaaa; margin-left:20px;">
         <li>Security footage deleted — requires admin access</li>
         <li>Communication logs modified — security clearance needed</li>
-        <li>Navigation route altered — security override used</li>
-        <li>Reactor tampered with — access logs erased</li>
+        <li>Reactor diagnostic terminal exploited — access logs erased</li>
         <li>Medical records accessed — security credentials used</li>
+        <li>Admin terminal database compromised — credentials changed</li>
     </ul>
     <p style="margin-top:10px;">⚠️ Only someone with <strong>security privileges</strong> could do all of this.</p>
 </div>
+
+<!-- Emergency Hint Button -->
+{% if not emergency_hint_used %}
+<div style="margin:20px 0; padding:16px; background:rgba(245,166,35,0.05); border:1px dashed var(--amber); border-radius:var(--radius); text-align:center;">
+    <p style="color:var(--warm-gray); font-size:0.9rem; margin-bottom:10px;">Need help identifying the impostor?</p>
+    <form action="{{ url_for('emergency.emergency_hint') }}" method="POST" style="display:inline;">
+        <button type="submit" class="hint-btn" style="border-color:var(--amber); color:var(--amber);">
+            🚨 Request Emergency Intel (-50 points)
+        </button>
+    </form>
+</div>
+{% else %}
+<div style="margin:20px 0; padding:16px; background:rgba(245,166,35,0.08); border:1px solid var(--amber); border-radius:var(--radius);">
+    <p style="color:var(--amber); font-size:0.95rem;">
+        <strong>💡 EMERGENCY INTEL:</strong> All sabotaged systems required high-level access — cameras, reactor, admin panel, communications. Only one crew role has clearance for <strong>ALL</strong> of these systems: the <strong>Security Officer</strong>.
+    </p>
+</div>
+{% endif %}
 
 <form method="POST">
     <div class="suspect-grid">

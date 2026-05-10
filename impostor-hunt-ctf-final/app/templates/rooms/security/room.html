@@ -1,23 +1,56 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>🔐 SECURITY ROOM</h2>
-<p class="status">{% if is_solved %}✅ FOOTAGE RECOVERED{% else %}⚠️ Camera footage deleted{% endif %}</p>
+<p class="status">{% if is_solved %}✅ FOOTAGE RECOVERED{% else %}⚠️ Camera footage tampered{% endif %}</p>
 
 <div class="security-container">
-    <div class="cctv-feed">
+    {% if is_solved %}
+    <!-- Clean hallway photo after fix -->
+    <div class="cctv-feed" style="height:auto; background:#111; padding:0; border:2px solid var(--success);">
+        <img src="{{ url_for('static', filename='images/hallway_clean.jpg') }}" 
+             alt="Security Camera — Hallway Clear" 
+             style="width:100%; display:block; opacity:0.9;">
+        <div class="cctv-text" style="color:var(--success);">
+            <span style="display:inline-block; width:8px; height:8px; background:var(--success); border-radius:50%; margin-right:5px;"></span> 
+            LIVE [CAM-04] <br>
+            2147-10-12 — FEED RESTORED
+        </div>
+    </div>
+    {% else %}
+    <!-- Corrupted surveillance photo before fix -->
+    <div class="cctv-feed" style="height:auto; background:#111; padding:0; position:relative;">
+        <img src="{{ url_for('static', filename='images/surveillance_corrupted.jpg') }}" 
+             alt="Corrupted surveillance footage" 
+             style="width:100%; display:block; opacity:0.7; filter: contrast(1.3) saturate(0.5);">
         <div class="cctv-static"></div>
         <div class="cctv-scanline"></div>
         <div class="cctv-text">
             <span class="rec-dot"></span> REC [CAM-04] <br>
-            2147-10-12 03:22:15
+            2147-10-12 03:22:15 — TAMPERED
         </div>
     </div>
+    {% endif %}
 
     <div class="challenge-box">
-        <p><strong>SCENARIO:</strong> The security cameras were disabled during the sabotage. Metadata from a deleted file was recovered.</p>
-        <pre>Recovered file: deleted_footage.mp4
-Size: 12.4 MB
-Timestamp: 03:22 ship time</pre>
+        {% if is_solved %}
+            <p style="color:var(--success);"><strong>CAMERAS RESTORED:</strong> All surveillance feeds are back online. The footage shows the hallway is clear.</p>
+        {% else %}
+            <p><strong>SCENARIO:</strong> The security cameras captured one final frame before being disabled. The impostor embedded hidden data inside the photo's metadata before corrupting the feed.</p>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px;">📷 Download the recovered surveillance photo and examine it carefully. The hidden data may be <em>encoded</em> — not just hidden.</p>
+            
+            <div style="margin-top:15px; display:flex; gap:12px; flex-wrap:wrap;">
+                <a href="{{ url_for('security.download_footage') }}" 
+                   class="btn" style="font-size:0.85rem; padding:8px 18px;">
+                    📥 Download Surveillance Photo
+                </a>
+            </div>
+            
+            <div style="margin-top:15px; padding:12px; background:rgba(0,0,0,0.3); border-radius:var(--radius-sm); border-left:3px solid var(--amber);">
+                <p style="font-size:0.85rem; color:var(--warm-gray); margin:0;">
+                    <strong style="color:var(--amber);">💡 TIP:</strong> Photos contain more than just pixels. Metadata (EXIF data) can hide information — use tools like <code style="color:var(--teal);">exiftool</code>, or any online EXIF viewer to inspect the file properties.
+                </p>
+            </div>
+        {% endif %}
     </div>
 </div>
 
@@ -47,7 +80,7 @@ Timestamp: 03:22 ship time</pre>
 {% else %}
 <div class="solved-banner">
     <h3>✅ CAMERA FEED RESTORED</h3>
-    <p>Security footage is now backing up correctly.</p>
+    <p>Security footage is now backing up correctly. All camera feeds are operational.</p>
     <a href="{{ url_for('dashboard.index') }}" class="btn">Back to Dashboard</a>
 </div>
 {% endif %}
