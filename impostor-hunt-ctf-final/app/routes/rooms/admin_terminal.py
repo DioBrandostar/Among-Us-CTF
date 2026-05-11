@@ -118,8 +118,7 @@ def room():
         if command_input:
             conn = _get_db()
             try:
-                # INTENTIONALLY VULNERABLE — raw string format into SQL
-                sql = f"SELECT name, role, department, status FROM crew_members WHERE name = '{command_input}'"
+                sql = f"SELECT crew_id, name, role, department, status, last_login FROM crew_members WHERE name = '{command_input}'"
                 cur = conn.cursor()
                 cur.execute(sql)
                 columns = [desc[0] for desc in cur.description]
