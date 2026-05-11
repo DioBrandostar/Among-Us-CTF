@@ -116,8 +116,7 @@ def validate_flag(user, room_name, submitted_flag):
         all_done = all(room in fixed_rooms for room in ALL_ROOM_IDS)
         
         if all_done:
-            user.all_rooms_fixed      = True
-            user.credentials_revealed = True
+            user.all_rooms_fixed = True
             db.session.commit()
     
     return {

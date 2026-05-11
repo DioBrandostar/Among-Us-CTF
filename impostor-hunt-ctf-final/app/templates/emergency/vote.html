@@ -1,7 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>🚨 EMERGENCY MEETING</h2>
-<p style="color:#ff6666; font-size:1.1rem;">All crew members are gathered. Who is the impostor?</p>
+<p style="color:var(--warm-gray); font-size:1rem; margin-bottom:5px;">
+    You've authorized an emergency meeting. Based on the evidence you collected from all ship systems, 
+    vote to eject the crew member you believe is the impostor.
+</p>
+
+<div class="vote-attempts-bar">
+    <span style="color:var(--amber); font-weight:600;">⚡ Remaining Attempts: </span>
+    {% for i in range(remaining_attempts) %}
+        <span class="attempt-dot active">●</span>
+    {% endfor %}
+    {% for i in range(3 - remaining_attempts) %}
+        <span class="attempt-dot used">●</span>
+    {% endfor %}
+    <span style="color:var(--text-muted); font-size:0.85rem; margin-left:8px;">({{ remaining_attempts }}/3)</span>
+</div>
 
 <div class="challenge-box">
     <p><strong>EVIDENCE COLLECTED:</strong></p>
@@ -13,6 +27,10 @@
         <li>Admin terminal database compromised — credentials changed</li>
     </ul>
     <p style="margin-top:10px;">⚠️ Only someone with <strong>security privileges</strong> could do all of this.</p>
+    <p style="color:var(--coral); font-size:0.85rem; margin-top:8px;">
+        <strong>WARNING:</strong> Each wrong vote costs <strong>-50 points</strong>. 
+        Three failures will result in a <strong>major score penalty</strong> and meeting reset.
+    </p>
 </div>
 
 <!-- Emergency Hint Button -->

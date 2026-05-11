@@ -42,13 +42,30 @@
     {% endfor %}
 </div>
 
-{% if all_done %}
-<div class="emergency-section">
-    <h3>⚠️ All Systems Restored — But Danger Remains</h3>
-    <p>The evidence is overwhelming. Someone on this ship sabotaged every system.</p>
-    <p style="color:var(--coral); font-weight:600;">It's time to confront the crew.</p>
-    <a href="{{ url_for('emergency.vote') }}" class="btn btn-emergency">🚨 Call Emergency Meeting</a>
+<!-- Emergency Button — Always Visible -->
+<div class="emergency-section {% if all_done %}emergency-active{% else %}emergency-disabled{% endif %}">
+    {% if all_done %}
+        <div class="emergency-pulse-ring"></div>
+        <h3>🚨 All Systems Restored — But Danger Remains</h3>
+        <p>The evidence is overwhelming. Someone on this ship sabotaged every system.</p>
+        <p style="color:var(--coral); font-weight:600;">It's time to confront the crew.</p>
+        <a href="{{ url_for('emergency.emergency_login') }}" class="btn btn-emergency emergency-glow">
+            🚨 CALL EMERGENCY MEETING
+        </a>
+    {% else %}
+        <h3 style="opacity:0.5;">🔒 EMERGENCY PROTOCOL</h3>
+        <p style="color:var(--text-muted); opacity:0.6;">
+            Emergency meeting cannot be called while ship systems are offline.
+            <br>Repair all <strong>{{ 7 - progress_count }}</strong> remaining system(s) to activate.
+        </p>
+        <a href="{{ url_for('emergency.locked') }}" class="btn btn-emergency-disabled">
+            🔒 EMERGENCY MEETING (OFFLINE)
+        </a>
+        <div class="emergency-progress">
+            <div class="emergency-progress-bar" style="width: {{ (progress_count / 7 * 100)|int }}%;"></div>
+        </div>
+        <p style="color:var(--text-muted); font-size:0.75rem; margin-top:8px;">Systems online: {{ progress_count }}/7</p>
+    {% endif %}
 </div>
-{% endif %}
 
 {% endblock %}

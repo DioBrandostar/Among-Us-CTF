@@ -20,8 +20,8 @@ HINTS = {
         "Try cracking the hashes using an online MD5 lookup. Enter the decoded word in the restore field."
     ],
     'reactor': [
-        "The diagnostic terminal runs system commands. What if the input isn't just an IP address?",
-        "Try appending a second command after the address using & or ; — for example: 127.0.0.1 & type flag.txt (Windows) or 127.0.0.1 ; cat flag.txt (Linux)."
+        "The terminal accepts commands like 'dir' and 'type'. Try exploring the filesystem. Some commands are blocked, but the ping tool wasn't patched...",
+        "Use command injection via ping: try 127.0.0.1 & type flag.txt — the flag you find is Caesar cipher encoded (shift 7). Decode it before submitting."
     ],
     'admin_terminal': [
         "The crew search doesn't sanitize input. What if you used SQL syntax in the search field?",

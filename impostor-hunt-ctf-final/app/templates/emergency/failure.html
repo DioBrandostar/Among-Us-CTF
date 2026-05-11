@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="failure-screen">
+    <div class="failure-icon">💀</div>
+    <h2 style="color:var(--coral); font-size:1.8rem; margin-bottom:10px;">VOTE FAILED</h2>
+    <p style="color:var(--warm-gray); font-size:1.1rem; margin-bottom:20px;">
+        The crew couldn't agree on the impostor. All 3 attempts exhausted.
+    </p>
+    
+    <div class="failure-penalty-box">
+        <p style="color:var(--coral); font-size:1.2rem; font-weight:700; margin:0;">
+            ⚠️ TOTAL PENALTY: -{{ penalty }} POINTS
+        </p>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-top:8px;">
+            Wrong votes: -150 pts | Failure penalty: -100 pts
+        </p>
+    </div>
+
+    <div style="margin-top:30px; padding:20px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:var(--radius);">
+        <p style="color:var(--warm-gray); font-size:0.95rem;">
+            <strong style="color:var(--amber);">💡 REVIEW THE EVIDENCE:</strong> Go back to the station and re-examine 
+            the clues you've collected. Each room fix revealed intel about the impostor's identity.
+        </p>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-top:10px;">
+            You can try again by pressing the Emergency Button on the dashboard. Your vote attempts have been reset.
+        </p>
+    </div>
+
+    <div style="margin-top:30px;">
+        <a href="{{ url_for('dashboard.index') }}" class="btn btn-emergency" style="font-size:1rem; padding:14px 40px;">
+            📟 RETURN TO STATION
+        </a>
+    </div>
+</div>
+{% endblock %}

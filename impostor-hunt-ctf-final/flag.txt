@@ -1,1 +1,1 @@
-FLAG{command_injection_reactor_meltdown}
+MSHN{jvtthuk_puqljapvu_ylhjavy_tlsakvdu}

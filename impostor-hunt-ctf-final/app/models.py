@@ -22,6 +22,8 @@ class User(UserMixin, db.Model):
 
     all_rooms_fixed = db.Column(db.Boolean, default=False)
     credentials_revealed = db.Column(db.Boolean, default=False)
+    impostor_identified = db.Column(db.Boolean, default=False)
+    vote_attempts = db.Column(db.Integer, default=0)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

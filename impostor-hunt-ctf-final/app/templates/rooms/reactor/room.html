@@ -12,41 +12,62 @@
     <div class="temp-warning" {% if is_solved %}style="color:var(--success); animation:none;"{% endif %}>{% if is_solved %}CORE TEMPERATURE NOMINAL{% else %}CORE OVERHEAT IMMINENT{% endif %}</div>
 
     <div class="challenge-box" style="margin-top:20px;">
-        <p><strong>SCENARIO:</strong> The reactor's cooling system was sabotaged. The impostor left a backdoor in the diagnostic terminal. A sensor ping tool was left running — but it doesn't sanitize inputs.</p>
-        <p style="color:var(--text-muted); font-size:0.9rem;">Use the diagnostic console below to investigate the system. There may be hidden files on the server...</p>
+        <p><strong>SCENARIO:</strong> The reactor's cooling system was sabotaged. The standard cooldown command <code style="color:var(--coral);">reactor_cooldown --override</code> is not responding — it requires Level 5 clearance that was revoked.</p>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-top:8px;">A diagnostic terminal is still active below. Use it to investigate the system and find the hidden flag. <em>The flag may be encoded — not in plain text.</em></p>
+        <div style="margin-top:10px; padding:10px; background:rgba(255,107,107,0.08); border-left:3px solid var(--coral); border-radius:var(--radius-sm);">
+            <p style="font-size:0.85rem; color:var(--warm-gray); margin:0;">
+                <strong style="color:var(--coral);">⚠️ ALERT:</strong> The ping diagnostic tool was flagged in the last security audit for <em>unsanitized input handling</em>. Engineering never patched it.
+            </p>
+        </div>
     </div>
 </div>
 
 {% if not is_solved %}
-<!-- Diagnostic Console -->
+<!-- Reactor Diagnostic Terminal -->
 <div class="terminal-wrapper" style="margin: 20px 0;">
     <div class="admin-container">
         <div class="terminal-header">
-            <span>REACTOR-DIAG v2.1 — Sensor Ping Utility</span>
+            <span>REACTOR-DIAG v2.1 — System Terminal</span>
             <span>X</span>
         </div>
         <div class="terminal-body">
-            <p style="color:var(--teal); margin-bottom:15px; font-size:0.8rem;">
-                root@reactor-core:~$ <span class="typing-text">Cooling system diagnostics ready...</span>
+            <p style="color:var(--teal); margin-bottom:5px; font-size:0.75rem;">
+                root@reactor-core:~$ <span class="typing-text">System terminal active. Type 'help' for commands.</span>
             </p>
+            <p style="color:var(--coral); margin-bottom:15px; font-size:0.75rem;">
+                [WARNING] reactor_cooldown: ACCESS DENIED — Level 5 clearance required
+            </p>
+
             <form method="POST" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                <input type="hidden" name="action" value="diagnose">
-                <span style="color:var(--amber); font-family:'JetBrains Mono',monospace; font-size:0.85rem;">$&gt;</span>
-                <input type="text" name="target" placeholder="Enter sensor node address to ping..." 
+                <input type="hidden" name="action" value="terminal">
+                <span style="color:var(--amber); font-family:'JetBrains Mono',monospace; font-size:0.85rem;">C:\reactor-systems&gt;</span>
+                <input type="text" name="command" placeholder="Enter command (try: help, dir, ping ...)"
                        style="flex:1; min-width:250px; background:rgba(0,0,0,0.6); border:1px solid var(--border); color:var(--teal); padding:10px 14px; font-family:'JetBrains Mono',monospace; font-size:0.85rem; border-radius:4px;"
-                       value="{{ request.form.get('target', '') if not is_solved else '' }}" autocomplete="off">
-                <button type="submit" style="background:linear-gradient(135deg,#3A9B9B,#2A6B6B); color:white; border:none; padding:10px 20px; border-radius:4px; font-family:inherit; font-weight:600; cursor:pointer; font-size:0.85rem;">RUN DIAGNOSTIC</button>
+                       value="{{ last_command }}" autocomplete="off">
+                <button type="submit" style="background:linear-gradient(135deg,#3A9B9B,#2A6B6B); color:white; border:none; padding:10px 20px; border-radius:4px; font-family:inherit; font-weight:600; cursor:pointer; font-size:0.85rem;">EXECUTE</button>
             </form>
 
-            {% if ping_output %}
-            <div style="margin-top:15px; padding:12px; background:rgba(0,0,0,0.5); border:1px solid var(--border); border-radius:4px; max-height:250px; overflow-y:auto;">
-                <pre style="color:var(--teal); font-size:0.8rem; white-space:pre-wrap; word-break:break-all; margin:0; background:transparent; border:none; padding:0;">{{ ping_output }}</pre>
+            {% if terminal_output %}
+            <div style="margin-top:15px; padding:12px; background:rgba(0,0,0,0.5); border:1px solid var(--border); border-radius:4px; max-height:300px; overflow-y:auto;">
+                <pre style="color:var(--teal); font-size:0.8rem; white-space:pre-wrap; word-break:break-all; margin:0; background:transparent; border:none; padding:0;">{{ terminal_output }}</pre>
             </div>
             {% endif %}
 
-            {% if ping_error %}
+            {% if terminal_error %}
             <div style="margin-top:15px; padding:10px; background:rgba(255,107,107,0.1); border:1px solid var(--coral); border-radius:4px;">
-                <span style="color:var(--coral); font-size:0.85rem;">{{ ping_error }}</span>
+                <span style="color:var(--coral); font-size:0.85rem;">{{ terminal_error }}</span>
+            </div>
+            {% endif %}
+
+            {% if not terminal_output and not terminal_error %}
+            <div class="log-scroll" style="margin-top:10px;">
+                <span style="color:var(--text-muted); font-size:0.75rem;">
+                    - [SYSTEM] Reactor diagnostic terminal v2.1 loaded<br>
+                    - [SYSTEM] Available commands: dir, type, ping, reactor_cooldown, help<br>
+                    - [WARNING] reactor_cooldown: BLOCKED (Level 5 required)<br>
+                    - [WARNING] Ping utility: <span style="color:var(--coral);">UNPATCHED</span> — input not sanitized<br>
+                    - [SYSTEM] Awaiting input...
+                </span>
             </div>
             {% endif %}
         </div>

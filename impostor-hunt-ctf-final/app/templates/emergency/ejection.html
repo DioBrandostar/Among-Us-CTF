@@ -1,10 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>⚠️ EJECTION PROTOCOL ENGAGED</h2>
-<div class="challenge-box">
-    <p><strong>MARWAN:</strong> "You think you've won? I've changed the admin credentials. The ejection system requires administrator authorization. You'll never find the new login!"</p>
-    <p style="color:#ff6666; margin-top:10px;">The airlock override panel requires the <strong>admin username</strong> and <strong>password</strong> that Marwan set...</p>
-    <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px;">💡 <em>Think back — the Admin Terminal database is still accessible. There may be a hidden table with the credentials.</em></p>
+
+<div class="ejection-scene">
+    <div class="door-container">
+        <div class="door inner-door closed">
+            <div class="door-label">INNER DOOR</div>
+            <div class="door-status sealed">🔒 SEALED</div>
+        </div>
+        <div class="airlock-chamber">
+            <div class="impostor-trapped">
+                <div class="impostor-icon">🧑‍🚀</div>
+                <div class="impostor-name">MARWAN</div>
+                <div class="impostor-status">TRAPPED IN AIRLOCK</div>
+            </div>
+        </div>
+        <div class="door outer-door stuck">
+            <div class="door-label">OUTER DOOR</div>
+            <div class="door-status stuck-status">⚠️ STUCK</div>
+        </div>
+    </div>
 </div>
-<a href="{{ url_for('emergency.final_room') }}" class="btn btn-emergency">ATTEMPT OVERRIDE</a>
+
+<div class="challenge-box" style="margin-top:25px;">
+    <p><strong>MARWAN:</strong> <em style="color:var(--coral);">"You caught me... but I sabotaged the outer airlock door before you could eject me. The ejection mechanism is locked with a chained security override. You'll never figure it out!"</em></p>
+    <p style="margin-top:15px; color:var(--warm-gray);">
+        The inner door has sealed behind Marwan, trapping him in the airlock chamber. But the <strong>outer door to space won't open</strong> — 
+        the ejection mechanism has been locked with a multi-layered security override.
+    </p>
+    <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px;">
+        You need to access the airlock control panel and solve the chained security override to open the outer door and complete the ejection.
+    </p>
+</div>
+
+<div style="text-align:center; margin-top:25px;">
+    <a href="{{ url_for('emergency.ejection_room') }}" class="btn btn-emergency" style="font-size:1.05rem; padding:14px 40px;">
+        🔧 ACCESS AIRLOCK CONTROLS
+    </a>
+</div>
 {% endblock %}
