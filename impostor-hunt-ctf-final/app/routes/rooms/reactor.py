@@ -70,7 +70,7 @@ def room():
             elif cmd_lower.startswith('reactor_cooldown'):
                 terminal_output = ("ACCESS DENIED: reactor_cooldown requires Level 5 clearance.\n"
                                    "Current user: reactor_tech (Level 2)\n"
-                                   "Contact: admin@horizon-7.ship for clearance upgrade.\n"
+                                   "Contact: admin@impostor-hunt.ship for clearance upgrade.\n"
                                    "STATUS: Command blocked by security policy.")
 
             # Simulated: help

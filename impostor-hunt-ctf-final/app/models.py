@@ -51,7 +51,6 @@ class User(UserMixin, db.Model):
             'security',
             'communications',
             'reactor',
-            'admin_terminal'
         ]
         fixed = self.get_fixed_rooms()
         return all(room in fixed for room in ALL_ROOMS)

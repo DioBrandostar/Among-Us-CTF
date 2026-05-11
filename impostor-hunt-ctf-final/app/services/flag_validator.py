@@ -9,8 +9,6 @@ ROOM_FLAGS = {
     'security':       'FLAG{surveil_cam_breach}',
     'communications': 'FLAG{cookies_are_not_safe_in_space}',
     'reactor':        'FLAG{command_injection_reactor_meltdown}',
-    'admin_terminal': 'FLAG{sql_injection_admin_pwned}',
-    'final':          'FLAG{impostor_ejected_gg_wp_crewmate}',
 }
 
 ROOM_POINTS = {
@@ -20,12 +18,10 @@ ROOM_POINTS = {
     'security':       100,
     'communications': 150,
     'reactor':        150,
-    'admin_terminal': 150,
-    'final':          400,
 }
 
 ALL_ROOM_IDS = [
-    'electrical', 'cafeteria', 'medbay', 'security', 'communications', 'reactor', 'admin_terminal'
+    'electrical', 'cafeteria', 'medbay', 'security', 'communications', 'reactor'
 ]
 
 
@@ -33,7 +29,7 @@ def validate_flag(user, room_name, submitted_flag):
     submitted_flag = submitted_flag.strip()
     
     # Already solved
-    if room_name != 'final' and user.has_fixed_room(room_name):
+    if user.has_fixed_room(room_name):
         return {
             'success':        False,
             'already_solved': True,

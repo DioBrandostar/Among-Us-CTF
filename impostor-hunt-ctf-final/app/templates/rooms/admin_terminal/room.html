@@ -1,129 +1,110 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>🖥️ ADMIN TERMINAL</h2>
-<p class="status">{% if is_solved %}✅ ADMIN ACCESS SECURED{% else %}⚠️ Unauthorized admin access detected{% endif %}</p>
+<h2>🖥️ Admin Control Panel</h2>
+<p class="status" style="color:var(--amber);">🔑 Access granted by Captain Yousef for investigation purposes</p>
 
 <div class="admin-container">
     <div class="terminal-header">
-        <span>SSH: root@horizon-7-admin — Crew Database</span>
+        <span>CREW MANAGEMENT SYSTEM — Admin Panel v3.2</span>
         <span>X</span>
     </div>
     <div class="terminal-body">
-        {% if is_solved %}
-        <p style="color:var(--success); margin-bottom:10px; font-size:0.8rem;">
-            root@horizon-7-admin:~$ <span style="color:var(--success);">System secured. Database terminal still active.</span>
-        </p>
-        <div style="padding:10px; background:rgba(78,203,113,0.08); border:1px solid rgba(78,203,113,0.3); border-radius:4px; margin-bottom:15px;">
-            <p style="color:var(--success); font-size:0.85rem; margin:0;">
-                ⚠️ <strong>INTEL:</strong> The impostor changed the admin credentials before being discovered. The old credentials no longer work. Use this terminal to find the <strong>new admin credentials</strong> hidden in the database — you'll need them for the final override.
-            </p>
-        </div>
-        {% else %}
-        <p style="color:var(--teal); margin-bottom:15px; font-size:0.8rem;">
-            root@horizon-7-admin:~$ <span class="typing-text">Crew database query terminal active...</span>
-        </p>
-        {% endif %}
 
-        <!-- Search Form — always active (even after fix) -->
+        <!-- Available Commands -->
+        <div style="margin-bottom:20px; padding:15px; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:6px;">
+            <h4 style="color:var(--teal); margin-bottom:10px; font-size:0.9rem;">📋 Available Commands:</h4>
+            <ul style="list-style:none; padding:0; margin:0; font-family:'JetBrains Mono',monospace; font-size:0.8rem;">
+                <li style="padding:4px 0; color:var(--text-muted);">• <code style="color:var(--amber);">users</code> — List all registered crew members</li>
+                <li style="padding:4px 0; color:var(--text-muted);">• <code style="color:var(--amber);">Marwan</code> — View crew member info</li>
+                <li style="padding:4px 0; color:var(--text-muted);">• <code style="color:var(--amber);">Kareem</code> — View crew member info</li>
+                <li style="padding:4px 0; color:var(--text-muted);">• <code style="color:var(--amber);">Yousef</code> — View crew member info</li>
+                <li style="padding:4px 0; color:var(--text-muted);">• <code style="color:var(--amber);">logs</code> — View recent access logs</li>
+                <li style="padding:4px 0; color:var(--text-muted);">• <code style="color:var(--amber);">status</code> — Check system status</li>
+                <li style="padding:4px 0; color:var(--text-muted);">• <code style="color:var(--amber);">reset [system]</code> — Reset a ship system</li>
+            </ul>
+        </div>
+
+        <!-- Command Input -->
         <form method="POST" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:15px;">
-            <input type="hidden" name="action" value="search">
-            <span style="color:var(--amber); font-family:'JetBrains Mono',monospace; font-size:0.85rem;">SQL&gt;</span>
-            <input type="text" name="query" placeholder="Search crew logs by name..." 
-                   value="{{ search_query }}"
-                   style="flex:1; min-width:250px; background:rgba(0,0,0,0.6); border:1px solid var(--border); color:var(--teal); padding:10px 14px; font-family:'JetBrains Mono',monospace; font-size:0.85rem; border-radius:4px;" autocomplete="off">
-            <button type="submit" style="background:linear-gradient(135deg,#3A9B9B,#2A6B6B); color:white; border:none; padding:10px 20px; border-radius:4px; font-family:inherit; font-weight:600; cursor:pointer; font-size:0.85rem;">EXECUTE QUERY</button>
+            <input type="text" name="command" placeholder="Enter command..."
+                   value="{{ command_input }}"
+                   style="flex:1; min-width:250px; background:rgba(0,0,0,0.6); border:1px solid var(--border); color:var(--teal); padding:12px 16px; font-family:'JetBrains Mono',monospace; font-size:0.9rem; border-radius:6px;" autocomplete="off">
+            <button type="submit" style="background:linear-gradient(135deg,#3A9B9B,#2A6B6B); color:white; border:none; padding:12px 24px; border-radius:6px; font-family:inherit; font-weight:600; cursor:pointer; font-size:0.9rem;">Execute</button>
         </form>
 
-        <!-- Query Results -->
-        {% if search_results is not none %}
-        <div style="margin-top:10px; padding:12px; background:rgba(0,0,0,0.5); border:1px solid var(--border); border-radius:4px; max-height:300px; overflow-y:auto;">
-            {% if search_results|length > 0 %}
-            <table style="width:100%; border-collapse:collapse; font-family:'JetBrains Mono',monospace; font-size:0.8rem;">
-                <thead>
-                    <tr>
-                        {% for col in columns %}
-                        <th style="text-align:left; padding:6px 10px; color:var(--teal); border-bottom:1px solid var(--border); font-size:0.75rem; text-transform:uppercase;">{{ col }}</th>
+        <!-- Command Output -->
+        {% if command_output is not none %}
+        <div style="margin-top:10px; padding:14px; background:rgba(0,0,0,0.5); border:1px solid var(--border); border-radius:6px;">
+            {% if command_output|length > 0 %}
+                <p style="color:var(--coral); font-size:0.85rem; margin-bottom:10px; font-weight:600;">⛔ ACCESS DENIED — Admin privileges required</p>
+                <table style="width:100%; border-collapse:collapse; font-family:'JetBrains Mono',monospace; font-size:0.8rem;">
+                    <thead>
+                        <tr>
+                            {% for col in columns %}
+                            <th style="text-align:left; padding:6px 10px; color:var(--teal); border-bottom:1px solid var(--border); font-size:0.75rem; text-transform:uppercase;">{{ col }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in command_output %}
+                        <tr>
+                            {% for col in columns %}
+                            <td style="padding:6px 10px; color:var(--text); border-bottom:1px solid rgba(255,255,255,0.03);">{{ row[col] }}</td>
+                            {% endfor %}
+                        </tr>
                         {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in search_results %}
-                    <tr>
-                        {% for col in columns %}
-                        <td style="padding:6px 10px; color:var(--text); border-bottom:1px solid rgba(255,255,255,0.03);">{{ row[col] }}</td>
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <p style="color:var(--text-muted); font-size:0.75rem; margin-top:8px;">{{ search_results|length }} row(s) returned.</p>
+                    </tbody>
+                </table>
+                <p style="color:var(--text-muted); font-size:0.75rem; margin-top:8px;">{{ command_output|length }} record(s) found.</p>
             {% else %}
-            <p style="color:var(--text-muted); font-size:0.85rem;">0 rows returned. No matching records found.</p>
+                <p style="color:var(--coral); font-size:0.85rem;">⛔ ACCESS DENIED — Command not recognized or no matching records.</p>
             {% endif %}
         </div>
         {% endif %}
 
-        {% if search_error %}
-        <div style="margin-top:10px; padding:10px; background:rgba(255,107,107,0.1); border:1px solid var(--coral); border-radius:4px;">
-            <span style="color:var(--coral); font-size:0.8rem; font-family:'JetBrains Mono',monospace;">SQL Error: {{ search_error }}</span>
+        {% if command_error %}
+        <div style="margin-top:10px; padding:12px; background:rgba(255,107,107,0.1); border:1px solid var(--coral); border-radius:6px;">
+            <span style="color:var(--coral); font-size:0.8rem; font-family:'JetBrains Mono',monospace;">Error: {{ command_error }}</span>
         </div>
         {% endif %}
 
-        {% if not search_results and not search_error %}
-        <div class="log-scroll" style="margin-top:10px;">
-            <span style="color:var(--text-muted); font-size:0.75rem;">
-                - [SYSTEM] Database tables loaded <br>
-                - [SYSTEM] Query interface ready <br>
-                - [SYSTEM] Search crew_logs by name <br>
-                {% if not is_solved %}
-                - [WARNING] Input validation: <span style="color:var(--coral);">DISABLED</span> <br>
-                - [SYSTEM] Awaiting query...
-                {% else %}
-                - [SYSTEM] Room secured — terminal remains active for admin credential recovery <br>
-                - [WARNING] Impostor may have stored credentials in hidden database tables
-                {% endif %}
-            </span>
+        {% if not command_output and not command_error %}
+        <div style="margin-top:10px; padding:10px; color:var(--text-muted); font-size:0.75rem; font-family:'JetBrains Mono',monospace;">
+            [SYSTEM] Admin panel ready. Enter a command above.<br>
+            [SYSTEM] Database tables loaded: crew_members<br>
+            [WARNING] Input validation: <span style="color:var(--coral);">DISABLED</span>
         </div>
         {% endif %}
     </div>
 
-    {% if not is_solved %}
+    <!-- Investigation Notes -->
     <div class="challenge-box" style="margin-top:20px; background:rgba(255,255,255,0.05);">
-        <p><strong>SCENARIO:</strong> The admin terminal's crew database was compromised. The search function connects directly to the database without proper input filtering. There may be hidden tables containing critical information.</p>
-        <p style="color:var(--text-muted); font-size:0.9rem; margin-top:8px;">💡 The query runs: <code style="color:var(--teal);">SELECT id, name, role, last_seen FROM crew_logs WHERE name LIKE '%<em>your input</em>%'</code></p>
+        <p><strong>INVESTIGATION NOTES:</strong> Captain Yousef has granted you access to the ship's admin panel. The system processes your commands through the <code style="color:var(--teal);">crew_members</code> database. Input validation appears to be disabled — the system may be vulnerable.</p>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-top:8px;">💡 Your goal: Find the impostor's credentials so you can authorize the Emergency Meeting.</p>
     </div>
-    {% endif %}
 </div>
-
-{% if not is_solved %}
-<form method="POST" class="flag-form">
-    <input type="hidden" name="action" value="submit_flag">
-    <input type="text" name="flag" placeholder="FLAG{...}" required>
-    <button type="submit">SUBMIT FLAG</button>
-</form>
 
 <div class="hint-section">
     {% set hints_count = current_user.get_used_hints_count('admin_terminal') %}
+    {% set crew = get_room_crew('admin_terminal') %}
     {% if hints_count > 0 %}
         <div class="hints-display">
             {% for i in range(1, hints_count + 1) %}
-                <div class="hint-item">
-                    <strong>💡 Hint {{ i }}:</strong> {{ get_hint_text('admin_terminal', i) }}
+                <div class="hint-item" style="border-left-color:{{ crew.color }};">
+                    <strong style="color:{{ crew.color }};">{{ crew.icon }} {{ crew.name }}:</strong> {{ get_hint_text('admin_terminal', i) }}
                 </div>
             {% endfor %}
         </div>
     {% endif %}
     {% if hints_count < 2 %}
-        <form action="{{ url_for('main.get_hint', room_name='admin_terminal') }}" method="POST" style="display:inline;">
-            <button type="submit" class="hint-btn">Request Hint (-20 points)</button>
-        </form>
+        <div class="crew-hint-section">
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:8px;">Need assistance? Ask the captain:</p>
+            <form action="{{ url_for('main.get_hint', room_name='admin_terminal') }}" method="POST" style="display:inline;">
+                <button type="submit" class="hint-btn" style="border-color:{{ crew.color }}; color:{{ crew.color }};">
+                    {{ crew.icon }} Ask {{ crew.name }} ({{ crew.role }}) — -20 points
+                </button>
+            </form>
+        </div>
     {% endif %}
 </div>
-{% else %}
-<div class="solved-banner">
-    <h3>✅ TERMINAL SECURED</h3>
-    <p>Unauthorized access vectors patched. The database terminal remains active for credential recovery.</p>
-    <a href="{{ url_for('dashboard.index') }}" class="btn">Back to Dashboard</a>
-</div>
-{% endif %}
 {% endblock %}

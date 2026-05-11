@@ -7,9 +7,9 @@
     {% if is_solved %}
     <!-- Clean hallway photo after fix -->
     <div class="cctv-feed" style="height:auto; background:#111; padding:0; border:2px solid var(--success);">
-        <img src="{{ url_for('static', filename='images/hallway_clean.jpg') }}" 
-             alt="Security Camera — Hallway Clear" 
-             style="width:100%; display:block; opacity:0.9;">
+        <img src="{{ url_for('static', filename='images/surveillance_corrupted.jpg') }}" 
+             alt="Security Camera — Feed Restored" 
+             style="width:100%; display:block; opacity:0.9; filter: saturate(1.2) brightness(1.1);">
         <div class="cctv-text" style="color:var(--success);">
             <span style="display:inline-block; width:8px; height:8px; background:var(--success); border-radius:50%; margin-right:5px;"></span> 
             LIVE [CAM-04] <br>
@@ -47,7 +47,7 @@
             
             <div style="margin-top:15px; padding:12px; background:rgba(0,0,0,0.3); border-radius:var(--radius-sm); border-left:3px solid var(--amber);">
                 <p style="font-size:0.85rem; color:var(--warm-gray); margin:0;">
-                    <strong style="color:var(--amber);">💡 TIP:</strong> Photos contain more than just pixels. Metadata (EXIF data) can hide information — use tools like <code style="color:var(--teal);">exiftool</code>, or any online EXIF viewer to inspect the file properties.
+                    <strong style="color:var(--amber);">💡 TIP:</strong> Photos contain more than just pixels. Metadata (EXIF data) can hide information — use tools like <code style="color:var(--teal);">exiftool</code>, or any online EXIF viewer to inspect the file properties. The hidden data appears to be encrypted with a <em>Vigenère cipher</em> — the keyword might be hiding in the metadata itself.
                 </p>
             </div>
         {% endif %}
@@ -62,19 +62,25 @@
 
 <div class="hint-section">
     {% set hints_count = current_user.get_used_hints_count('security') %}
+    {% set crew = get_room_crew('security') %}
     {% if hints_count > 0 %}
         <div class="hints-display">
             {% for i in range(1, hints_count + 1) %}
-                <div class="hint-item">
-                    <strong>💡 Hint {{ i }}:</strong> {{ get_hint_text('security', i) }}
+                <div class="hint-item" style="border-left-color:{{ crew.color }};">
+                    <strong style="color:{{ crew.color }};">{{ crew.icon }} {{ crew.name }}:</strong> {{ get_hint_text('security', i) }}
                 </div>
             {% endfor %}
         </div>
     {% endif %}
     {% if hints_count < 2 %}
-        <form action="{{ url_for('main.get_hint', room_name='security') }}" method="POST" style="display:inline;">
-            <button type="submit" class="hint-btn">Request Hint (-20 points)</button>
-        </form>
+        <div class="crew-hint-section">
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:8px;">Need help? Ask the crew:</p>
+            <form action="{{ url_for('main.get_hint', room_name='security') }}" method="POST" style="display:inline;">
+                <button type="submit" class="hint-btn" style="border-color:{{ crew.color }}; color:{{ crew.color }};">
+                    {{ crew.icon }} Ask {{ crew.name }} ({{ crew.role }}) — -20 points
+                </button>
+            </form>
+        </div>
     {% endif %}
 </div>
 {% else %}

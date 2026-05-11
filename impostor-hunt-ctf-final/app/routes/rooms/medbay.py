@@ -149,7 +149,7 @@ def room():
             return redirect(url_for('medbay.room'))
 
     # Get which crew record to view — defaults to 8 (user)
-    view_id = request.args.get('id', 8, type=int)
+    view_id = request.args.get('id', None, type=int)
     viewed_record = None
 
     if view_id in CREW_RECORDS:

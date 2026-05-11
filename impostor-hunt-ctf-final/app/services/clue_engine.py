@@ -1,14 +1,14 @@
 from app.models import RoomFix
 
 # 6 clues total — admin_terminal no longer gives a clue
-# (it gives persistent SQL access for credential recovery instead)
+# Each clue points toward Marwan but includes misdirection via Kareem
 CLUES = {
-    'medbay': "🏥 The scan records were altered. Someone was trying to hide their physical symptoms.",
-    'communications': "📡 Internal logs show a user impersonating an officer to gain trust.",
-    'reactor': "☢️ The diagnostic terminal was left wide open. Someone ran unauthorized commands on the core systems.",
-    'security': "🔐 Surveillance footage was tampered with — hidden data was embedded in the camera snapshots.",
-    'electrical': "⚡ The power grid was bypassed using a custom script. The impostor knows the station's architecture.",
-    'cafeteria': "🍕 An encoded message was found under a table. It points to a rendezvous point near the reactor."
+    'medbay': "🏥 Patient #7 (Marwan) has impossible vitals — blood type 'QR+', 247% O₂. His records were manually altered. But Kareem was also near Medbay that night...",
+    'communications': "📡 Someone spoofed Officer credentials to send fake orders. Marwan's login was used at 03:15, but Kareem's radio was found tuned to a restricted frequency.",
+    'reactor': "☢️ Unauthorized commands were executed on the reactor core. Maintenance logs show Marwan had access, though Kareem's engineering badge was swiped nearby at 02:50.",
+    'security': "🔐 Surveillance footage was tampered with — metadata hidden in the camera files. Marwan deleted security logs at 03:17, but Kareem reported seeing someone else in the hallway.",
+    'electrical': "⚡ The power grid was bypassed at Access Point B-12. Marwan's toolkit was found near the fuse box. However, Kareem claims he was repairing navigation at that time.",
+    'cafeteria': "🍕 A coded note was found under table 4: 'Meet at reactor, 0300.' Handwriting analysis is inconclusive — it could be Marwan's or Kareem's."
 }
 
 def get_unlocked_clues(user):

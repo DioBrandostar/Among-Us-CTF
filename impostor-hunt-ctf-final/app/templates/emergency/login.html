@@ -5,23 +5,35 @@
 <div class="challenge-box" style="max-width:600px; margin:0 auto 30px;">
     <p><strong>EMERGENCY MEETING REQUEST</strong></p>
     <p style="color:var(--warm-gray); margin-top:10px;">
-        The emergency protocol requires <strong>administrator authorization</strong> to initiate. 
-        The impostor changed the admin credentials before being discovered.
+        The emergency protocol requires <strong>administrator authorization</strong> to initiate.
+        Enter the current admin credentials to proceed.
     </p>
-    <div style="margin-top:15px; padding:12px; background:rgba(245,166,35,0.08); border-left:3px solid var(--amber); border-radius:var(--radius-sm);">
-        <p style="font-size:0.85rem; color:var(--warm-gray); margin:0;">
-            <strong style="color:var(--amber);">💡 HINT:</strong> The Admin Terminal's database is still accessible. 
-            Use SQL injection to find the hidden <code style="color:var(--teal);">admin_credentials</code> table containing the impostor's new login.
-        </p>
-    </div>
 </div>
+
+<!-- Purchasable hint -->
+{% if not login_hint_used %}
+<div style="margin:0 auto 25px; max-width:600px; padding:14px; background:rgba(245,166,35,0.05); border:1px dashed var(--amber); border-radius:var(--radius); text-align:center;">
+    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:8px;">Stuck? Purchase intel for a clue.</p>
+    <form action="{{ url_for('emergency.emergency_login_hint') }}" method="POST" style="display:inline;">
+        <button type="submit" class="hint-btn" style="border-color:var(--amber); color:var(--amber);">
+            💡 Buy Intel (-30 points)
+        </button>
+    </form>
+</div>
+{% else %}
+<div style="margin:0 auto 25px; max-width:600px; padding:14px; background:rgba(245,166,35,0.08); border:1px solid var(--amber); border-radius:var(--radius);">
+    <p style="color:var(--amber); font-size:0.9rem; margin:0;">
+        <strong>💡 INTEL:</strong> The impostor stored new credentials in a hidden database table. Use the Admin Terminal's SQL query to list all tables and find the account with <strong>SUPERUSER</strong> access. Don't forget to decrypt the password.
+    </p>
+</div>
+{% endif %}
 
 <form method="POST" class="flag-form" style="flex-direction:column; align-items:stretch; max-width:450px; margin:0 auto;">
     <div style="display:flex; flex-direction:column; gap:14px;">
         <label style="color:var(--teal); font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:1px;">Admin Username</label>
-        <input type="text" name="username" placeholder="Enter admin username..." required 
+        <input type="text" name="username" placeholder="Enter admin username..." required
                style="background:rgba(0,0,0,0.5); border:2px solid var(--border); color:var(--text-bright); padding:12px 18px; font-family:'JetBrains Mono',monospace; font-size:0.95rem; border-radius:8px;">
-        
+
         <label style="color:var(--teal); font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-top:4px;">Admin Password</label>
         <input type="text" name="password" placeholder="Enter admin password..." required
                style="background:rgba(0,0,0,0.5); border:2px solid var(--border); color:var(--text-bright); padding:12px 18px; font-family:'JetBrains Mono',monospace; font-size:0.95rem; border-radius:8px;">

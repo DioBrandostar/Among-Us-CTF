@@ -1,26 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>🏆 INVESTIGATION LEADERBOARD</h2>
+<h2>🏆 HALL OF FAME</h2>
+<p style="color:var(--warm-gray); margin-bottom:20px; text-align:center;">Investigators who successfully identified and ejected the impostor.</p>
+
+{% if winners|length > 0 %}
 <table class="leaderboard">
     <thead>
         <tr>
             <th>RANK</th>
             <th>INVESTIGATOR</th>
-            <th>LABS COMPLETED</th>
             <th>SCORE</th>
             <th>TIME</th>
         </tr>
     </thead>
     <tbody>
-        {% for user in all_users %}
+        {% for user in winners %}
         <tr {% if user.id == current_user.id %}class="current-user"{% endif %}>
-            <td>{{ loop.index }}</td>
+            <td>
+                {% if loop.index == 1 %}🥇
+                {% elif loop.index == 2 %}🥈
+                {% elif loop.index == 3 %}🥉
+                {% else %}{{ loop.index }}
+                {% endif %}
+            </td>
             <td>{{ user.username }}</td>
-            <td>{{ user.get_rooms_fixed_count() }} / 7</td>
-            <td>{{ user.total_score }}</td>
-            <td>{{ user.get_elapsed_time() or 'Active...' }}</td>
+            <td style="color:var(--amber); font-weight:700;">{{ user.total_score }}</td>
+            <td style="color:var(--teal);">{{ user.get_elapsed_time() or '—' }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+{% else %}
+<div style="text-align:center; padding:60px 20px; color:var(--text-muted);">
+    <p style="font-size:2rem; margin-bottom:10px;">🚀</p>
+    <p style="font-size:1.1rem;">No investigators have completed the mission yet.</p>
+    <p>Be the first to eject the impostor!</p>
+</div>
+{% endif %}
 {% endblock %}

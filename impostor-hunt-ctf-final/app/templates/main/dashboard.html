@@ -2,20 +2,19 @@
 {% block content %}
 <div style="text-align:center; margin-bottom:24px;">
     <h2>📟 SHIP SYSTEMS — STATUS REPORT</h2>
-    <p style="color:var(--warm-gray);">Investigator <strong style="color:var(--amber);">{{ current_user.username }}</strong> • Systems restored: <strong style="color:var(--success);">{{ progress_count }}</strong>/7 • Clues: <strong style="color:var(--teal);">{{ unlocked_clues|length }}</strong>/6</p>
+    <p style="color:var(--warm-gray);">Investigator <strong style="color:var(--amber);">{{ current_user.username }}</strong> • Systems restored: <strong style="color:var(--success);">{{ core_progress }}</strong>/6 • Clues: <strong style="color:var(--teal);">{{ unlocked_clues|length }}</strong>/6</p>
 </div>
 
 <div class="room-grid">
     {% set rooms = [
-        ('cafeteria', '🍕', 'Cafeteria', 'Secure food storage'),
-        ('electrical', '⚡', 'Electrical', 'Stabilize power grid'),
-        ('communications', '📡', 'Communications', 'Restore ship-wide messaging'),
-        ('medbay', '🏥', 'Medbay', 'Protect medical records'),
-        ('reactor', '☢️', 'Reactor', 'Cool reactor core'),
-        ('security', '🔐', 'Security', 'Restore surveillance'),
-        ('admin_terminal', '🖥️', 'Admin Terminal', 'Regain system control')
+        ('cafeteria', '🍕', 'Cafeteria', 'Secure food storage', '#3A9B9B'),
+        ('electrical', '⚡', 'Electrical', 'Stabilize power grid', '#FF8C42'),
+        ('communications', '📡', 'Communications', 'Restore ship-wide messaging', '#3A9B9B'),
+        ('medbay', '🏥', 'Medbay', 'Protect medical records', '#4ECB71'),
+        ('reactor', '☢️', 'Reactor', 'Cool reactor core', '#FF8C42'),
+        ('security', '🔐', 'Security', 'Restore surveillance', '#FF6B6B')
     ] %}
-    {% for room_id, icon, name, desc in rooms %}
+    {% for room_id, icon, name, desc, color in rooms %}
         <div class="room-card {% if room_id in fixed_rooms %}fixed{% else %}broken{% endif %}">
             <span class="room-icon">{{ icon }}</span>
             <div class="room-info">
@@ -42,6 +41,7 @@
     {% endfor %}
 </div>
 
+
 <!-- Emergency Button — Always Visible -->
 <div class="emergency-section {% if all_done %}emergency-active{% else %}emergency-disabled{% endif %}">
     {% if all_done %}
@@ -56,16 +56,15 @@
         <h3 style="opacity:0.5;">🔒 EMERGENCY PROTOCOL</h3>
         <p style="color:var(--text-muted); opacity:0.6;">
             Emergency meeting cannot be called while ship systems are offline.
-            <br>Repair all <strong>{{ 7 - progress_count }}</strong> remaining system(s) to activate.
+            <br>Repair all <strong>{{ 6 - core_progress }}</strong> remaining system(s) to activate.
         </p>
         <a href="{{ url_for('emergency.locked') }}" class="btn btn-emergency-disabled">
             🔒 EMERGENCY MEETING (OFFLINE)
         </a>
         <div class="emergency-progress">
-            <div class="emergency-progress-bar" style="width: {{ (progress_count / 7 * 100)|int }}%;"></div>
+            <div class="emergency-progress-bar" style="width: {{ (core_progress / 6 * 100)|int }}%;"></div>
         </div>
-        <p style="color:var(--text-muted); font-size:0.75rem; margin-top:8px;">Systems online: {{ progress_count }}/7</p>
+        <p style="color:var(--text-muted); font-size:0.75rem; margin-top:8px;">Systems online: {{ core_progress }}/6</p>
     {% endif %}
 </div>
-
 {% endblock %}

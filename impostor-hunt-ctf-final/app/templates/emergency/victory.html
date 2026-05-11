@@ -1,12 +1,151 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="victory-box">
-    <h1>🎉 IMPOSTOR EJECTED!</h1>
-    <p style="font-size:1.3rem; margin:20px 0;">Marwan has been ejected into space. The ship is safe.</p>
-    <div class="final-flag">FLAG{impostor_ejected_gg_wp_crewmate}</div>
-    <p style="margin:15px 0;">Final Score: <strong style="color:#66ff66;">{{ current_user.total_score }}</strong></p>
-    <p>Time: <strong style="color:#66ff66;">{{ current_user.get_elapsed_time() }}</strong></p>
-    <a href="{{ url_for('scoreboard.scoreboard') }}" class="btn">VIEW LEADERBOARD</a>
-    <a href="{{ url_for('dashboard.index') }}" class="btn">BACK TO STATION</a>
+<div class="victory-scene">
+    <!-- Stars animation background -->
+    <div class="stars-container">
+        <div class="star s1"></div><div class="star s2"></div><div class="star s3"></div>
+        <div class="star s4"></div><div class="star s5"></div><div class="star s6"></div>
+        <div class="star s7"></div><div class="star s8"></div><div class="star s9"></div>
+        <div class="star s10"></div><div class="star s11"></div><div class="star s12"></div>
+    </div>
+
+    <!-- Ejected astronaut floating away -->
+    <div class="ejected-astronaut">🧑‍🚀</div>
+
+    <div class="victory-content">
+        <h1 class="victory-title">IMPOSTOR EJECTED</h1>
+        <p class="victory-subtitle">Marwan was The Impostor.</p>
+
+        <div class="victory-story">
+            <p><strong style="color:var(--amber);">Why did Marwan do it?</strong></p>
+            <p>Marwan was planted by a rival mining corporation — <em>Nexus Deep Industries</em> — to steal classified mining coordinates from Jupiter's outer colonies. He infiltrated the crew as a Security Officer, using his all-access clearance to sabotage communications, tamper with medical records, corrupt surveillance footage, and lock down the admin systems.</p>
+            <p style="margin-top:12px;">His plan was to transmit the stolen data and disable the ship before anyone could stop him. But one investigator — <strong style="color:var(--teal);">you</strong> — uncovered every layer of his sabotage and brought him to justice.</p>
+        </div>
+
+        <div class="victory-stats">
+            <div class="stat-item">
+                <span class="stat-label">FINAL SCORE</span>
+                <span class="stat-value" style="color:var(--success);">{{ current_user.total_score }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">MISSION TIME</span>
+                <span class="stat-value" style="color:var(--teal);">{{ current_user.get_elapsed_time() }}</span>
+            </div>
+        </div>
+
+        <p class="victory-congrats">🎉 Congratulations, Investigator {{ current_user.username }}!</p>
+        <p style="color:var(--text-muted); font-size:0.9rem;">The Orion-9 is safe. The crew can return home.</p>
+
+        <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <a href="{{ url_for('scoreboard.scoreboard') }}" class="btn" style="font-size:1rem; padding:14px 32px;">🏆 VIEW LEADERBOARD</a>
+            <a href="{{ url_for('dashboard.index') }}" class="btn btn-solved" style="font-size:1rem; padding:14px 32px;">📟 BACK TO STATION</a>
+        </div>
+    </div>
 </div>
+
+<style>
+.victory-scene {
+    position: relative;
+    text-align: center;
+    padding: 40px 20px 60px;
+    overflow: hidden;
+    min-height: 80vh;
+}
+
+.stars-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+.star {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: white;
+    border-radius: 50%;
+    animation: starBrighten 2s ease-in-out infinite alternate;
+}
+.s1 { top:5%; left:10%; animation-delay:0s; }
+.s2 { top:15%; left:80%; animation-delay:0.3s; }
+.s3 { top:25%; left:30%; animation-delay:0.6s; }
+.s4 { top:35%; left:60%; animation-delay:0.9s; }
+.s5 { top:45%; left:15%; animation-delay:1.2s; }
+.s6 { top:55%; left:85%; animation-delay:0.2s; }
+.s7 { top:65%; left:45%; animation-delay:0.5s; }
+.s8 { top:75%; left:70%; animation-delay:0.8s; }
+.s9 { top:10%; left:50%; animation-delay:1.1s; }
+.s10 { top:80%; left:25%; animation-delay:0.4s; }
+.s11 { top:40%; left:90%; animation-delay:0.7s; }
+.s12 { top:60%; left:5%; animation-delay:1.0s; }
+
+@keyframes starBrighten {
+    0% { opacity: 0.2; transform: scale(1); box-shadow: none; }
+    100% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 8px rgba(255,255,255,0.8); }
+}
+
+.ejected-astronaut {
+    font-size: 4rem;
+    position: relative;
+    animation: floatAway 6s ease-out forwards;
+    opacity: 1;
+}
+
+@keyframes floatAway {
+    0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+    50% { transform: translateY(-100px) rotate(180deg) scale(0.7); opacity: 0.7; }
+    100% { transform: translateY(-300px) rotate(360deg) scale(0.2); opacity: 0; }
+}
+
+.victory-content {
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 1s ease 1.5s both;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.victory-title {
+    font-size: 3rem;
+    color: var(--success);
+    text-shadow: 0 0 40px rgba(78,203,113,0.5);
+    margin-bottom: 8px;
+    letter-spacing: 4px;
+}
+
+.victory-subtitle {
+    color: var(--coral);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.victory-story {
+    max-width: 600px;
+    margin: 0 auto 30px;
+    padding: 24px;
+    background: rgba(11,13,23,0.8);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: left;
+    line-height: 1.7;
+    color: var(--text);
+}
+
+.victory-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 30px 0;
+}
+
+.stat-item { text-align: center; }
+.stat-label { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
+.stat-value { display: block; font-size: 2.5rem; font-weight: 700; }
+
+.victory-congrats {
+    font-size: 1.4rem;
+    color: var(--amber);
+    font-weight: 700;
+    margin: 20px 0 8px;
+}
+</style>
 {% endblock %}

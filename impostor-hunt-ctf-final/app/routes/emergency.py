@@ -1,36 +1,29 @@
 import base64
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+import json
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from app.extensions import db
-from app.models import HintUsage
+from app.models import HintUsage, RoomFix
 from app.services.scoring import sync_user_score
-from app.services import flag_validator
 from datetime import datetime
 
 emergency_bp = Blueprint('emergency', __name__)
 
 CORRECT_IMPOSTOR = 'Marwan'
 EMERGENCY_HINT_COST = 50
+EMERGENCY_LOGIN_HINT_COST = 30
 WRONG_VOTE_PENALTY = 50
 FAILURE_PENALTY = 100
 MAX_VOTE_ATTEMPTS = 3
 
-# Admin credentials (same as in admin_terminal's hidden DB table)
+# Admin credentials (found via SQLi + AES decryption in admin_terminal)
 EMERGENCY_ADMIN_USER = 'impostor_admin'
 EMERGENCY_ADMIN_PASS = 'vent_crawl_2147'
-
-# Chained vulnerability data for airlock
-AIRLOCK_PART1 = 'impostor_ejected_gg'
-AIRLOCK_PART2 = 'wp_crewmate'
-AIRLOCK_B64_MESSAGE = base64.b64encode(
-    f"AIRLOCK_KEY_PART1: {AIRLOCK_PART1} | HINT: The second part of the override code is stored in the airlock maintenance log. Inspect the page source code.".encode()
-).decode()
 
 
 @emergency_bp.route('/emergency-locked')
 @login_required
 def locked():
-    """Redirect when emergency button is pressed but rooms aren't all fixed."""
     flash('🔒 Emergency protocol offline. All ship systems must be repaired before calling an emergency meeting.', 'danger')
     return redirect(url_for('dashboard.index'))
 
@@ -38,14 +31,14 @@ def locked():
 @emergency_bp.route('/emergency-login', methods=['GET', 'POST'])
 @login_required
 def emergency_login():
-    """Admin credential gate before the emergency meeting."""
     if not current_user.check_all_rooms_fixed():
         flash('You must repair all systems first!', 'danger')
         return redirect(url_for('dashboard.index'))
 
-    # If already authenticated, skip to vote
     if current_user.credentials_revealed:
         return redirect(url_for('emergency.vote'))
+
+    login_hint_used = current_user.used_hint('emergency_login', 1)
 
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
@@ -57,10 +50,29 @@ def emergency_login():
             flash('✅ Admin credentials verified. Emergency meeting authorized.', 'success')
             return redirect(url_for('emergency.vote'))
         else:
-            flash('❌ Invalid admin credentials. Check the Admin Terminal database for the impostor\'s changed credentials.', 'danger')
+            flash('❌ Invalid admin credentials. Investigate the Admin Terminal database to find them.', 'danger')
             return redirect(url_for('emergency.emergency_login'))
 
-    return render_template('emergency/login.html')
+    return render_template('emergency/login.html', login_hint_used=login_hint_used)
+
+
+@emergency_bp.route('/emergency-login-hint', methods=['POST'])
+@login_required
+def emergency_login_hint():
+    if not current_user.used_hint('emergency_login', 1):
+        new_hint = HintUsage(
+            user_id=current_user.id,
+            room_name='emergency_login',
+            hint_number=1,
+            points_lost=EMERGENCY_LOGIN_HINT_COST
+        )
+        db.session.add(new_hint)
+        current_user.total_score = max(0, current_user.total_score - EMERGENCY_LOGIN_HINT_COST)
+        db.session.commit()
+        flash(f'💡 Intel recovered! -{EMERGENCY_LOGIN_HINT_COST} points.', 'info')
+    else:
+        flash('You already purchased this intel.', 'info')
+    return redirect(url_for('emergency.emergency_login'))
 
 
 @emergency_bp.route('/vote', methods=['GET', 'POST'])
@@ -74,7 +86,6 @@ def vote():
         flash('You must enter admin credentials to authorize the emergency meeting.', 'danger')
         return redirect(url_for('emergency.emergency_login'))
 
-    # Already identified impostor — go to ejection
     if current_user.impostor_identified:
         return redirect(url_for('emergency.trigger_ejection'))
 
@@ -90,7 +101,6 @@ def vote():
             flash('✅ CORRECT! Marwan is the impostor! Initiating ejection sequence...', 'success')
             return redirect(url_for('emergency.trigger_ejection'))
         else:
-            # Wrong vote — penalty
             current_user.vote_attempts += 1
             current_user.total_score = max(0, current_user.total_score - WRONG_VOTE_PENALTY)
             db.session.commit()
@@ -98,7 +108,6 @@ def vote():
             remaining = MAX_VOTE_ATTEMPTS - current_user.vote_attempts
 
             if current_user.vote_attempts >= MAX_VOTE_ATTEMPTS:
-                # 3 strikes — failure
                 current_user.total_score = max(0, current_user.total_score - FAILURE_PENALTY)
                 current_user.vote_attempts = 0
                 db.session.commit()
@@ -107,16 +116,15 @@ def vote():
                 flash(f'❌ {suspect} is not the impostor. -{WRONG_VOTE_PENALTY} points. {remaining} attempt(s) remaining.', 'danger')
                 return redirect(url_for('emergency.vote'))
 
-    # Check if emergency hint was used
     emergency_hint_used = current_user.used_hint('emergency', 1)
 
     crew = [
-        {'name': 'Marwan', 'role': 'Security Officer', 'clue': 'Had access to cameras and logs'},
-        {'name': 'Kareem', 'role': 'Engineer', 'clue': 'Found near reactor, but had alibi'},
-        {'name': 'Yaseen', 'role': 'Navigation Specialist', 'clue': 'Route deviation detected, but framed'},
-        {'name': 'Saleem', 'role': 'Comms Technician', 'clue': 'Transmissions sent, but under orders'},
-        {'name': 'Adam', 'role': 'Medical Officer', 'clue': 'Accessed medbay records legitimately'},
-        {'name': 'Yousef', 'role': 'Ship Captain', 'clue': 'Has all access, but was in cryo sleep'},
+        {'name': 'Marwan', 'role': 'Security Officer', 'color': '#FF6B6B', 'clue': 'Had access to cameras and logs'},
+        {'name': 'Kareem', 'role': 'Engineer', 'color': '#FF8C42', 'clue': 'Found near reactor, but had alibi'},
+        {'name': 'Yaseen', 'role': 'Navigation Specialist', 'color': '#4A90D9', 'clue': 'Route deviation detected, but framed'},
+        {'name': 'Saleem', 'role': 'Comms Technician', 'color': '#3A9B9B', 'clue': 'Transmissions sent, but under orders'},
+        {'name': 'Adam', 'role': 'Medical Officer', 'color': '#4ECB71', 'clue': 'Accessed medbay records legitimately'},
+        {'name': 'Yousef', 'role': 'Ship Captain', 'color': '#F5A623', 'clue': 'Has all access, but was in cryo sleep'},
     ]
 
     return render_template('emergency/vote.html',
@@ -128,7 +136,6 @@ def vote():
 @emergency_bp.route('/emergency-hint', methods=['POST'])
 @login_required
 def emergency_hint():
-    """Buy a hint during the emergency meeting — costs points."""
     if not current_user.check_all_rooms_fixed():
         flash('You must repair all systems first!', 'danger')
         return redirect(url_for('dashboard.index'))
@@ -143,7 +150,7 @@ def emergency_hint():
         db.session.add(new_hint)
         current_user.total_score = max(0, current_user.total_score - EMERGENCY_HINT_COST)
         db.session.commit()
-        flash(f'💡 Intel recovered! {EMERGENCY_HINT_COST} points deducted from your score.', 'info')
+        flash(f'💡 Intel recovered! {EMERGENCY_HINT_COST} points deducted.', 'info')
     else:
         flash('You already used the emergency hint.', 'info')
 
@@ -153,8 +160,8 @@ def emergency_hint():
 @emergency_bp.route('/emergency-failure')
 @login_required
 def failure():
-    """Failure screen after 3 wrong votes."""
-    return render_template('emergency/failure.html', penalty=FAILURE_PENALTY + (WRONG_VOTE_PENALTY * MAX_VOTE_ATTEMPTS))
+    return render_template('emergency/failure.html',
+                         penalty=FAILURE_PENALTY + (WRONG_VOTE_PENALTY * MAX_VOTE_ATTEMPTS))
 
 
 @emergency_bp.route('/trigger-ejection')
@@ -163,23 +170,55 @@ def trigger_ejection():
     if not current_user.impostor_identified:
         flash('You must identify the impostor first!', 'danger')
         return redirect(url_for('emergency.vote'))
-
     return render_template('emergency/ejection.html')
 
 
-@emergency_bp.route('/ejection-room', methods=['GET', 'POST'])
+@emergency_bp.route('/ejection-room')
 @login_required
 def ejection_room():
-    """Chained vulnerability room — open the outer ejection door."""
     if not current_user.impostor_identified:
         return redirect(url_for('dashboard.index'))
+    return render_template('emergency/airlock.html')
 
-    if request.method == 'POST':
-        submitted_flag = request.form.get('flag', '').strip()
-        result = flag_validator.validate_flag(current_user, 'final', submitted_flag)
-        if result['success']:
+
+@emergency_bp.route('/api/airlock-status')
+@login_required
+def airlock_status():
+    """Simulated WebSocket-like endpoint — returns airlock JSON status."""
+    if not current_user.impostor_identified:
+        return jsonify({"error": "unauthorized"}), 403
+
+    return jsonify({
+        "system": "AIRLOCK-CTRL-v1.0",
+        "inner_door": "sealed",
+        "outer_door": "closed",
+        "door_status": "closed",
+        "override": False,
+        "impostor": "Marwan",
+        "chamber_pressure": "0.0 kPa",
+        "timestamp": datetime.utcnow().isoformat()
+    })
+
+
+@emergency_bp.route('/api/airlock-override', methods=['POST'])
+@login_required
+def airlock_override():
+    """Player sends modified JSON to open the outer door."""
+    if not current_user.impostor_identified:
+        return jsonify({"error": "unauthorized"}), 403
+
+    try:
+        data = request.get_json(force=True)
+    except Exception:
+        return jsonify({"error": "invalid JSON", "door_status": "closed"}), 400
+
+    door_status = data.get('door_status', '').lower()
+    override = data.get('override', False)
+
+    if door_status == 'opened' or override == True or override == 'true':
+        # Success! Mark game complete
+        if not current_user.completion_time:
             current_user.completion_time = datetime.utcnow()
-            from app.models import RoomFix
             existing = RoomFix.query.filter_by(user_id=current_user.id, room_name='final').first()
             if not existing:
                 final_fix = RoomFix(
@@ -190,15 +229,20 @@ def ejection_room():
                 )
                 db.session.add(final_fix)
             sync_user_score(current_user)
-            flash('🎉 <strong style="font-size:1.2rem;">OUTER DOOR OPENED — IMPOSTOR EJECTED!</strong><br>The ship is safe! Final Reward: <span style="color:var(--amber); font-weight:700;">400 Points</span>', 'success')
-            return redirect(url_for('emergency.victory'))
-        else:
-            flash('❌ Wrong override code. The outer door remains sealed. Keep investigating the airlock panel.', 'danger')
-            return redirect(url_for('emergency.ejection_room'))
 
-    return render_template('emergency/airlock.html',
-                         b64_code=AIRLOCK_B64_MESSAGE,
-                         airlock_part2=AIRLOCK_PART2)
+        return jsonify({
+            "status": "SUCCESS",
+            "door_status": "opened",
+            "message": "OUTER DOOR OPENED — IMPOSTOR EJECTED INTO SPACE",
+            "redirect": url_for('emergency.victory')
+        })
+    else:
+        return jsonify({
+            "status": "DENIED",
+            "door_status": "closed",
+            "message": "Override rejected. Send correct parameters.",
+            "hint": "Try changing door_status or override values"
+        }), 403
 
 
 @emergency_bp.route('/victory')

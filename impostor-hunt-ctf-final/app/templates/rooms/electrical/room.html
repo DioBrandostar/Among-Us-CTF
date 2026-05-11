@@ -26,7 +26,7 @@ Internal Logs: Access Point B-12 bypassed.</pre>
 </div>
 
 {% if not is_solved %}
-<!-- 🕵️ Ship Engineer's Note: The emergency restore code is FLAG{voltage_spike_77} -->
+<!-- The emergency restore code is FLAG{voltage_spike_77} -->
 <form method="POST" class="flag-form">
     <input type="text" name="flag" placeholder="FLAG{...}" required>
     <button type="submit">SUBMIT FLAG</button>
@@ -34,19 +34,25 @@ Internal Logs: Access Point B-12 bypassed.</pre>
 
 <div class="hint-section">
     {% set hints_count = current_user.get_used_hints_count('electrical') %}
+    {% set crew = get_room_crew('electrical') %}
     {% if hints_count > 0 %}
         <div class="hints-display">
             {% for i in range(1, hints_count + 1) %}
-                <div class="hint-item">
-                    <strong>💡 Hint {{ i }}:</strong> {{ get_hint_text('electrical', i) }}
+                <div class="hint-item" style="border-left-color:{{ crew.color }};">
+                    <strong style="color:{{ crew.color }};">{{ crew.icon }} {{ crew.name }}:</strong> {{ get_hint_text('electrical', i) }}
                 </div>
             {% endfor %}
         </div>
     {% endif %}
     {% if hints_count < 2 %}
-        <form action="{{ url_for('main.get_hint', room_name='electrical') }}" method="POST" style="display:inline;">
-            <button type="submit" class="hint-btn">Request Hint (-20 points)</button>
-        </form>
+        <div class="crew-hint-section">
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:8px;">Need help? Ask the crew:</p>
+            <form action="{{ url_for('main.get_hint', room_name='electrical') }}" method="POST" style="display:inline;">
+                <button type="submit" class="hint-btn" style="border-color:{{ crew.color }}; color:{{ crew.color }};">
+                    {{ crew.icon }} Ask {{ crew.name }} ({{ crew.role }}) — -20 points
+                </button>
+            </form>
+        </div>
     {% endif %}
 </div>
 {% else %}

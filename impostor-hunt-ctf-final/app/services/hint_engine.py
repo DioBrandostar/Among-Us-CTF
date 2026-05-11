@@ -1,35 +1,46 @@
 HINTS = {
     'electrical': [
-        "The ship's engineers sometimes leave notes in the system's source code. Try inspecting the page.",
-        "Right-click anywhere and select 'View Page Source'. Look for a commented-out line that contains the flag."
+        "Kareem scratches his head: \"The ship's engineers sometimes leave notes in the system's source code. Try inspecting the page — right-click and view source.\"",
+        "Kareem sighs: \"Right-click anywhere and select 'View Page Source'. Look for a commented-out line containing the flag. We're not great at hiding things.\""
     ],
     'cafeteria': [
-        "The digital menu display is corrupted with Base64 encoding. Try decoding the items.",
-        "Those strange strings on the menu (ending in '=') are Base64. Decode each one — one of them isn't a food name."
+        "Saleem leans in: \"The digital menu display got corrupted with some encoding. Those weird strings ending in '=' look like Base64 to me.\"",
+        "Saleem whispers: \"Decode each Base64 string on the menu. One of them isn't a food name — it's something the impostor hid there.\""
     ],
     'medbay': [
-        "You're assigned ID #8, but there are 7 other crew members. What if you changed the ID in the URL?",
-        "Try changing ?id=8 to other numbers (1-7). Some crew reports have ABNORMAL status with corrupted data containing flag parts."
+        "Adam adjusts his glasses: \"You're assigned patient ID #8, but there are only 7 crew members. What if you changed the ID in the URL to see other records?\"",
+        "Adam checks his clipboard: \"Try changing ?id=8 to other numbers (1-7). Some crew reports show ABNORMAL status with corrupted data containing flag fragments.\""
     ],
     'security': [
-        "The recovered surveillance photo may contain more than meets the eye. Have you checked the file's metadata?",
-        "Download the photo and inspect its EXIF metadata (use exiftool or an online EXIF viewer). The hidden text is encoded with a Caesar cipher — try different shift values."
+        "Marwan crosses his arms: \"The recovered surveillance photo contains more than pixels. Have you checked the file's metadata with an EXIF viewer?\"",
+        "Marwan mutters: \"Download the photo and inspect its EXIF metadata. The hidden text is Vigenère-encrypted — the keyword might be hiding in the metadata too, disguised as something ordinary.\""
     ],
     'communications': [
-        "The radio is receiving a stream of MD5 hashes. One of them is a very common password.",
-        "Try cracking the hashes using an online MD5 lookup. Enter the decoded word in the restore field."
+        "Saleem taps the radio: \"We're receiving a stream of MD5 hashes on the emergency channel. One of them is a very common password.\"",
+        "Saleem points at the screen: \"Try cracking the hashes using an online MD5 lookup tool. Enter the decoded word in the restore field.\""
     ],
     'reactor': [
-        "The terminal accepts commands like 'dir' and 'type'. Try exploring the filesystem. Some commands are blocked, but the ping tool wasn't patched...",
-        "Use command injection via ping: try 127.0.0.1 & type flag.txt — the flag you find is Caesar cipher encoded (shift 7). Decode it before submitting."
+        "Kareem wipes grease off his hands: \"The terminal accepts commands like 'dir' and 'type'. Try exploring the filesystem. Some commands are blocked, but the ping tool wasn't patched...\"",
+        "Kareem lowers his voice: \"Use command injection via ping: try 127.0.0.1 & type flag.txt — the flag you find is Caesar cipher encoded (shift 7). Decode it before submitting.\""
     ],
     'admin_terminal': [
-        "The crew search doesn't sanitize input. What if you used SQL syntax in the search field?",
-        "Try a UNION-based SQL injection: ' UNION SELECT 1,2,3 FROM secrets -- to discover hidden tables and their contents."
+        "Yousef nods: \"The crew search doesn't sanitize input. What if you used SQL syntax in the search field? Try listing all database tables.\"",
+        "Yousef points at the screen: \"Try UNION-based SQL injection: ' UNION SELECT 1,key,value,4,5 FROM secrets -- to find hidden data. Check system_keys for decryption keys.\""
     ],
     'emergency': [
         "All sabotaged systems required high-level access — cameras, reactor, admin panel, communications. Only one role has clearance for ALL of these systems."
     ]
+}
+
+# Crew members associated with each room for dialogue hints
+ROOM_CREW = {
+    'electrical': {'name': 'Kareem', 'role': 'Engineer', 'color': '#FF8C42', 'icon': '🔧'},
+    'cafeteria': {'name': 'Saleem', 'role': 'Comms Technician', 'color': '#3A9B9B', 'icon': '📡'},
+    'communications': {'name': 'Saleem', 'role': 'Comms Technician', 'color': '#3A9B9B', 'icon': '📡'},
+    'medbay': {'name': 'Adam', 'role': 'Medical Officer', 'color': '#4ECB71', 'icon': '🏥'},
+    'reactor': {'name': 'Kareem', 'role': 'Engineer', 'color': '#FF8C42', 'icon': '🔧'},
+    'security': {'name': 'Marwan', 'role': 'Security Officer', 'color': '#FF6B6B', 'icon': '🔐'},
+    'admin_terminal': {'name': 'Yousef', 'role': 'Ship Captain', 'color': '#F5A623', 'icon': '🚀'},
 }
 
 def get_hint_text(room_name, hint_number):
@@ -37,8 +48,12 @@ def get_hint_text(room_name, hint_number):
     room_hints = HINTS.get(room_name)
     if not room_hints:
         return None
-    
+
     if 1 <= hint_number <= len(room_hints):
         return room_hints[hint_number - 1]
-    
+
     return None
+
+def get_room_crew(room_name):
+    """Returns the crew member associated with a room."""
+    return ROOM_CREW.get(room_name)
