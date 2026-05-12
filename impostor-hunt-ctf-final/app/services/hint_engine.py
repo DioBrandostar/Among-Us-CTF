@@ -24,8 +24,13 @@ HINTS = {
         "Kareem lowers his voice: \"Use command injection via ping: try 127.0.0.1 & type flag.txt — the flag you find is Caesar cipher encoded (shift 7). Decode it before submitting.\""
     ],
     'admin_terminal': [
+<<<<<<< Updated upstream
         "Yousef scratches his chin: \"The command system seems to talk to a database behind the scenes. I noticed error messages leak through when you type unexpected characters... try a single quote.\"",
         "Yousef whispers: \"If errors show SQL syntax, you could try UNION-based injection to query other tables. The database might have more than just crew_members — look for tables storing credentials and keys.\""
+=======
+        "Yousef nods: \"The crew search doesn't sanitize input. What if you used SQL syntax in the search field? Try listing all database tables.\"",
+        "Yousef points at the screen: \"Try ' UNION SELECT 1,key,value,4,5 FROM secrets -- to find hidden data. Check system_keys for decryption keys.\""
+>>>>>>> Stashed changes
     ],
     'emergency': [
         "All sabotaged systems required high-level access — cameras, reactor, admin panel, communications. Only one role has clearance for ALL of these systems."
@@ -34,13 +39,13 @@ HINTS = {
 
 # Crew members associated with each room for dialogue hints
 ROOM_CREW = {
-    'electrical': {'name': 'Kareem', 'role': 'Engineer', 'color': '#FF8C42', 'icon': '🔧'},
-    'cafeteria': {'name': 'Saleem', 'role': 'Comms Technician', 'color': '#3A9B9B', 'icon': '📡'},
-    'communications': {'name': 'Saleem', 'role': 'Comms Technician', 'color': '#3A9B9B', 'icon': '📡'},
-    'medbay': {'name': 'Adam', 'role': 'Medical Officer', 'color': '#4ECB71', 'icon': '🏥'},
-    'reactor': {'name': 'Kareem', 'role': 'Engineer', 'color': '#FF8C42', 'icon': '🔧'},
-    'security': {'name': 'Marwan', 'role': 'Security Officer', 'color': '#FF6B6B', 'icon': '🔐'},
-    'admin_terminal': {'name': 'Yousef', 'role': 'Ship Captain', 'color': '#F5A623', 'icon': '🚀'},
+    'electrical': {'name': 'Kareem', 'role': 'Engineer', 'color': '#FF8C42', 'icon': '🔧', 'character_icon': 'character_electrical.png'},
+    'cafeteria': {'name': 'Saleem', 'role': 'Comms Technician', 'color': '#3A9B9B', 'icon': '📡', 'character_icon': 'character_cafeteria.png'},
+    'communications': {'name': 'Saleem', 'role': 'Comms Technician', 'color': '#3A9B9B', 'icon': '📡', 'character_icon': 'character_communications.png'},
+    'medbay': {'name': 'Adam', 'role': 'Medical Officer', 'color': '#4ECB71', 'icon': '🏥', 'character_icon': 'character_medbay.png'},
+    'reactor': {'name': 'Kareem', 'role': 'Engineer', 'color': '#FF8C42', 'icon': '🔧', 'character_icon': 'character_reactor.png'},
+    'security': {'name': 'Marwan', 'role': 'Security Officer', 'color': '#FF6B6B', 'icon': '🔐', 'character_icon': 'character_security.png'},
+    'admin_terminal': {'name': 'Yousef', 'role': 'Ship Captain', 'color': '#F5A623', 'icon': '🚀', 'character_icon': 'character_admin.png'},
 }
 
 def get_hint_text(room_name, hint_number):
