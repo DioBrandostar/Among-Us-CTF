@@ -43,8 +43,20 @@
 
 
 <!-- Emergency Button — Always Visible -->
-<div class="emergency-section {% if all_done %}emergency-active{% else %}emergency-disabled{% endif %}">
-    {% if all_done %}
+<div class="emergency-section {% if current_user.impostor_identified %}emergency-solved{% elif all_done %}emergency-active{% else %}emergency-disabled{% endif %}">
+    {% if current_user.impostor_identified %}
+        <h3 style="color:var(--success);">✅ IMPOSTOR EJECTED</h3>
+        <p>The threat has been eliminated. The ship is safe once again.</p>
+        <p style="color:var(--text-muted); font-weight:600;">Well done, Investigator.</p>
+        <button class="btn" style="background:var(--success); color:black; cursor:default; border-color:var(--success); box-shadow:0 0 15px rgba(76, 175, 80, 0.4);">
+            ✅ MISSION ACCOMPLISHED
+        </button>
+        {% if current_user.completion_time %}
+        <div style="margin-top: 15px;">
+            <a href="{{ url_for('emergency.victory') }}" class="btn" style="background:transparent; border-color:var(--teal);">View Victory Report</a>
+        </div>
+        {% endif %}
+    {% elif all_done %}
         <div class="emergency-pulse-ring"></div>
         <h3>🚨 All Systems Restored — But Danger Remains</h3>
         <p>The evidence is overwhelming. Someone on this ship sabotaged every system.</p>
