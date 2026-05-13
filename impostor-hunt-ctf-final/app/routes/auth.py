@@ -17,14 +17,18 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         
-        user = User.query.filter_by(username=username).first()
-        
-        if user and check_password_hash(user.password_hash, password):
-            login_user(user)
-            next_page = request.args.get('next')
-            return redirect(next_page if next_page else url_for('main.index'))
-        else:
-            flash('Invalid username or password', 'danger')
+        try:
+            user = User.query.filter_by(username=username).first()
+            
+            if user and check_password_hash(user.password_hash, password):
+                login_user(user)
+                next_page = request.args.get('next')
+                return redirect(next_page if next_page else url_for('main.index'))
+            else:
+                flash('Invalid username or password', 'danger')
+        except Exception as e:
+            print(f"Login error: {e}")
+            flash('An internal server error occurred during login.', 'danger')
             
     return render_template('auth/login.html')
 
@@ -37,20 +41,24 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         
-        user = User.query.filter_by(username=username).first()
-        
-        if user:
-            flash('Username already exists', 'danger')
-        else:
-            new_user = User(
-                username=username,
-                password_hash=generate_password_hash(password)
-            )
-            db.session.add(new_user)
-            db.session.commit()
+        try:
+            user = User.query.filter_by(username=username).first()
             
-            flash('Registration successful. Please log in.', 'success')
-            return redirect(url_for('auth.login'))
+            if user:
+                flash('Username already exists', 'danger')
+            else:
+                new_user = User(
+                    username=username,
+                    password_hash=generate_password_hash(password)
+                )
+                db.session.add(new_user)
+                db.session.commit()
+                
+                flash('Registration successful. Please log in.', 'success')
+                return redirect(url_for('auth.login'))
+        except Exception as e:
+            print(f"Register error: {e}")
+            flash('An internal server error occurred during registration.', 'danger')
             
     return render_template('auth/register.html')
 
