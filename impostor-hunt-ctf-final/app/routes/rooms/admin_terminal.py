@@ -1,8 +1,12 @@
 import sqlite3
 from flask import request, redirect, url_for, Blueprint, render_template, flash
 from flask_login import login_required, current_user
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad
+try:
+    from Crypto.Cipher import AES
+    from Crypto.Util.Padding import pad
+    HAVE_CRYPTO = True
+except ImportError:
+    HAVE_CRYPTO = False
 
 admin_terminal_bp = Blueprint('admin_terminal', __name__)
 
@@ -22,9 +26,11 @@ CREW_PASSWORDS = {
 
 def _aes_encrypt(plaintext):
     """AES-128-ECB encryption, returns hex string."""
-    cipher = AES.new(AES_KEY, AES.MODE_ECB)
-    padded = pad(plaintext.encode('utf-8'), AES.block_size)
-    return cipher.encrypt(padded).hex()
+    if HAVE_CRYPTO:
+        cipher = AES.new(AES_KEY, AES.MODE_ECB)
+        padded = pad(plaintext.encode('utf-8'), AES.block_size)
+        return cipher.encrypt(padded).hex()
+    return plaintext.encode('utf-8').hex()
 
 
 def _get_db():
@@ -65,7 +71,7 @@ def _get_db():
         level = 'SUPERUSER' if uname == 'impostor_admin' else 'STANDARD'
         cur.execute(
             'INSERT INTO encrypted_credentials (username, encrypted_password, algorithm, access_level) VALUES (?, ?, ?, ?)',
-            (uname, enc, 'AES-128-ECB', level),
+            (uname, enc, 'AES-128-ECB' if HAVE_CRYPTO else 'HEX', level),
         )
 
     # Table 3: system_keys — contains the AES key (found via SQLi)

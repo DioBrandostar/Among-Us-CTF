@@ -1,4 +1,5 @@
 import os
+import sys
 from flask import Flask
 from app.extensions import db, login_manager
 from app.config import config
@@ -7,7 +8,14 @@ def create_app(config_name=None):
     if config_name is None:
         config_name = os.environ.get('FLASK_ENV', 'development')
 
-    app = Flask(__name__)
+    # Fix for PyInstaller to find templates and static files correctly
+    if getattr(sys, 'frozen', False):
+        template_folder = os.path.join(sys._MEIPASS, 'app', 'templates')
+        static_folder = os.path.join(sys._MEIPASS, 'app', 'static')
+        app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+    else:
+        app = Flask(__name__)
+
     app.config.from_object(config.get(config_name, config['default']))
     
     # Secret key for sessions
@@ -23,6 +31,13 @@ def create_app(config_name=None):
 
     # Import models to register them
     from app import models
+    
+    try:
+        from Crypto.Cipher import AES
+        from Crypto.Util.Padding import pad
+        HAVE_CRYPTO = True
+    except ImportError:
+        HAVE_CRYPTO = False
     
     # Register blueprints
     from app.routes.auth import auth_bp
