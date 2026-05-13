@@ -1,5 +1,7 @@
 # Virtual Environment
 venv/
+.venv/
+env/
 
 # Python Cache
 __pycache__/
@@ -8,12 +10,19 @@ __pycache__/
 
 # Database
 *.db
+*.sqlite
+*.sqlite3
 
 # Environment Variables (NEVER upload this)
 .env
 
-# VS Code Settings
+# Flask instance folder (contains local db/secrets)
+instance/
+
+# IDE Settings
 .vscode/
+.idea/
+*.iml
 
 # OS Files
 .DS_Store
@@ -23,3 +32,7 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+
+# Testing
+.pytest_cache/
+.coverage
