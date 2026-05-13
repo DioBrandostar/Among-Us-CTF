@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.extensions import db
 from app.models import User
-import time
+import traceback
 import os
 
 auth_bp = Blueprint('auth', __name__)
@@ -27,8 +27,9 @@ def login():
             else:
                 flash('Invalid username or password', 'danger')
         except Exception as e:
-            print(f"Login error: {e}")
-            flash('An internal server error occurred during login.', 'danger')
+            print("Login error:")
+            traceback.print_exc()
+            flash('An internal server error occurred during login. See terminal for details.', 'danger')
             
     return render_template('auth/login.html')
 
@@ -57,14 +58,21 @@ def register():
                 flash('Registration successful. Please log in.', 'success')
                 return redirect(url_for('auth.login'))
         except Exception as e:
-            print(f"Register error: {e}")
-            flash('An internal server error occurred during registration.', 'danger')
+            print("Register error:")
+            traceback.print_exc()
+            flash('An internal server error occurred during registration. See terminal for details.', 'danger')
             
     return render_template('auth/register.html')
 
 @auth_bp.route('/logout')
 @login_required
 def logout():
-    logout_user()
-    flash('You have been logged out.', 'info')
-    return redirect(url_for('main.index'))
+    try:
+        logout_user()
+        flash('You have been logged out.', 'info')
+        return redirect(url_for('main.index'))
+    except Exception as e:
+        print("Logout error:")
+        traceback.print_exc()
+        flash('An internal server error occurred during logout. See terminal for details.', 'danger')
+        return redirect(url_for('main.index'))

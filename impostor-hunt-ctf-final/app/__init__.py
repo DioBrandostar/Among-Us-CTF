@@ -1,5 +1,6 @@
 import os
 import sys
+import traceback
 from flask import Flask
 from app.extensions import db, login_manager
 from app.config import config
@@ -78,6 +79,15 @@ def create_app(config_name=None):
             get_room_crew=get_room_crew,
             ROOM_POINTS=ROOM_POINTS
         )
+
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        print("\n" + "="*50)
+        print("INTERNAL SERVER ERROR OCCURRED:")
+        print("="*50)
+        traceback.print_exc()
+        print("="*50 + "\n")
+        return "Internal Server Error. Please check the terminal for details.", 500
 
     with app.app_context():
         db.create_all()
